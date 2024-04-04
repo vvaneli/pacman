@@ -1,3 +1,28 @@
+/* TO BE DELETED – START */
+
+img, #gameCover {
+  /* opacity: 0.5; */
+}
+
+#game {
+  background-color: green;
+}
+
+#gameInfo1, #gameInfo2 {
+background: aqua;
+}
+#life {
+/* background-color: black; */
+}
+#instruct, #leader {
+  border: 1px dotted grey;
+  color: lightgrey;
+  /* width: calc(280px * 2); */
+}
+
+/* TO BE DELETED – END */
+
+
 html {
   --mazeWidth: 448px;
   --mazeHeight: 496px;
@@ -12,6 +37,7 @@ html {
 
 body {
   font-family: sans-serif;
+  font-size: 18px;
   margin: 0 auto;
   text-align: center;
   min-height: 100vh;
@@ -19,67 +45,143 @@ body {
 
 /* FLEX CONTIANERS */
 
-body, main {
+main, #game, #gameCover, #gameInfo2 {
   display: flex;
   flex-direction: column;
 }
 
-#gameInfo2 {
-  display: flex;
-  justify-content: space-between;
-}
-
-main {
+main, #game {
   justify-content: center;
 }
 
+#gameInfo2, #gameCover {
+  justify-content: space-between;
+}
+
+#game {
+  align-items: center;
+}
+
 /* FLEX ITEMS */
+
 #instruct, #leader {
   order: 1;
 }
 
-/* PAGE ELEMENTS */
-
-
+/* HEADER */
 
 h1 {
-  padding: 1em 0;
+  /* padding: 1em 0; */
 }
 
-#instruct, #leader {
-  border: 1px dotted grey;
-  color: lightgrey;
-  width: calc(280px * 2);
-}
 
-#game {
-  margin: 0 1em;
-  width: var(--imgCoverWidth);
+
+/* GAME AREA */
+
+#game, #gameCover {
+  min-width: var(--mazeWidth);
   height: var(--imgCoverHeight);
-  background-color: red;
 }
+
+#gameCover, #gameInfo1, #gameInfo2 {
+  width: 100%;
+  max-width: var(--imgCoverWidth);
+  }
 
 #gameMaze {
-  border: 2px solid black;
-  width: var(--mazeWidth);
-  height: var(--mazeHeight);
+  min-width: var(--mazeWidth);
+  min-height: var(--mazeHeight);
+/* position: relative; */
+}
+
+/* GAME AREA: start and end of game */
+
+#gameCover {
+  background-image: url(/img/game-start_800w600h.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: auto;
+  /* z-index: 1; */
+  position: absolute
+}
+
+#imgCoverHeadline {
+  margin: calc(var(--imgCoverHeight)/4) 0;
+  /* z-index: 2; */
+  /* position: absolute; */
+  text-align: center;
+}
+
+#start {
+  /* z-index: 2; */
+  /* position: absolute; */
+  margin: calc(var(--imgCoverHeight)/4) auto;
+  width: calc(var(--mazeWidth)/2);
+
+}
+
+/* GAME AREA: during game */
+
+#gameMaze {
   background-color: lightgray;
 }
 
 #life, #level {
-  font-size: 2em;
-  padding: 0.5em;
+
 }
 
-.draft {
-  color: lightgray;
-  font-style: italic;
-  font-size: 0.8em;;
+/* SIDE PANELS */
+
+details > summary {
+  background-color: white;
+  cursor: pointer;
+  padding: 1em;
+  /* width: 100%; */
+  text-align: left;
+  /* border: none; */
+  /* outline: none; */
+  /* transition: 0.4s; */
 }
 
-@media screen and (min-width: 561px) {
+details > div {
+  padding: 1em;
+  text-align: left;
+}
+
+/* MEDIUM-WIDE SCREENS */
+
+/* @media screen and (min-width: 449px) and (max-width: 1199px) { */
+  @media screen and (min-width: 449px) {
+    body {
+      background-color: lightsalmon;
+    }
+  
+    #gameInfo1, #gameInfo2 {
+      flex-direction: row;
+    }
+  
+    #life {
+      order: 1;
+      flex-basis: var(--mazeWidth);
+    }
+  
+    #levelIcons {
+      order: 2;
+    }
+  
+    #level, #levelIcons {
+  /* width: calc((var(--imgCoverWidth)-var(--mazeWidth))/2); */
+  width: 176px;
+    }
+  
+  }
+
+/* WIDER SCREENS */
+
+@media screen and (min-width: 1200px) {
+
   body {
-  /* background-color: red; */
+    background-color: red;
   }
 
   /* FLEX CONTIANERS */
@@ -97,9 +199,18 @@ main {
 
 /* PAGE ELEMENTS */
 
-#instruct, #leader {
-  width: calc(280px);
-  height: calc(310px * 2);
+#game {
+  width: var(--imgCoverWidth);
+  height: var(--imgCoverHeight);
 }
 
+#imgCover {
+  left: 0;
 }
+
+#instruct, #leader {
+  min-width:200px;
+  height: var(--imgCoverHeight);
+  
+}
+
