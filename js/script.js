@@ -37,23 +37,23 @@ const mazeAlertText = {
 // characters' start positions and directions
 const actorsStateSetup = {
   pac: {
-    startTile: '',
+    startTile: 657,
     startDir: 'w',
   },
   gh1: {
-    startTile: '',
+    startTile: 321,
     startDir: 'e',
   },
   gh2: {
-    startTile: '',
+    startTile: 403,
     startDir: 'n',
   },
   gh3: {
-    startTile: '',
+    startTile: 405,
     startDir: 's',
   },
   gh4: {
-    startTile: '',
+    startTile: 407,
     startDir: 'n',
   },
 }
@@ -106,16 +106,35 @@ let progressCounter = 0
 //? On Page Load
 
 // function drawMaze() {
-  for (let i = 0; i < (mazeSetup.mazeWidth * mazeSetup.mazeHeight); i++) {
-    const mazeTile = document.createElement('div')
-    mazeTile.innerText = i
-    mazeTile.dataset.index = i
-    mazeTile.classList.add('tile')
-    mazeTile.style.width = mazeSetup.mazeTileWidthPx
-    mazeTile.style.height = mazeSetup.mazeTileHeightPx
-    gameMazeEl.append(mazeTile)
-    // console.log(mazeTile)
+// draw the game tiles in the game grid
+for (let i = 0; i < (mazeSetup.mazeWidth * mazeSetup.mazeHeight); i++) {
+  const mazeTile = document.createElement('div')
+  mazeTile.innerText = i
+  mazeTile.dataset.index = i
+  mazeTile.classList.add('tile')
+  mazeTile.style.width = mazeSetup.mazeTileWidthPx
+  mazeTile.style.height = mazeSetup.mazeTileHeightPx
+  // place characters at their start positions
+  if (i === actorsStateSetup.pac.startTile) {
+    mazeTile.classList.add('pac')
   }
+  if (i === actorsStateSetup.gh1.startTile) {
+    mazeTile.classList.add('gh1')
+  }
+  if (i === actorsStateSetup.gh2.startTile) {
+    mazeTile.classList.add('gh2')
+  }
+  if (i === actorsStateSetup.gh3.startTile) {
+    mazeTile.classList.add('gh3')
+  }
+  if (i === actorsStateSetup.gh4.startTile) {
+    mazeTile.classList.add('gh4')
+  }
+  // show in the html
+  gameMazeEl.append(mazeTile)
+  // console.log(mazeTile)
+}
+
 // }
 
 

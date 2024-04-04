@@ -11,11 +11,11 @@ body {
   background-color: rgb(244, 202, 202);
 }
 
-/* #gameMaze {
+#gameMaze {
   background-image: url(/img/PacMan_Maze_224w248h.png);
   background-repeat: no-repeat;
   background-size: 100%;
-} */
+}
 
 /* TO BE DELETED – END */
 
@@ -105,7 +105,7 @@ h1 {
 }
 
 .gh1 {
-  background-position: 0 -var(--mazeTileWidth);
+  background-position: 0 calc(var(--mazeTileWidth) * -1);
 }
 
 .gh2 {
