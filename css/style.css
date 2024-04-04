@@ -1,14 +1,23 @@
 /* TO BE DELETED – START */
+
 .tile {
-  border: 1px solid black;
+  border: 1px solid white;
+  color: white;
+  opacity: 30%;
   font-size: 8px;
 }
-/* TO BE DELETED – END */
 
 body {
   background-color: rgb(244, 202, 202);
 }
 
+/* #gameMaze {
+  background-image: url(/img/PacMan_Maze_224w248h.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+} */
+
+/* TO BE DELETED – END */
 
 html {
   --mazeWidth: 448px;
@@ -17,7 +26,6 @@ html {
   --mazeTileHeight: 16px;
   --imgCoverWidth: 800px;
   --imgCoverHeight: 600px;
-  
 }
 
 * {
@@ -76,19 +84,40 @@ h1 {
 }
 
 /* ACTORS */
+/* background-position: <pixels shifted right>px <pixels shifted down>px; */
 
-#pac,
-#gh1,
-#gh2,
-#gh3,
-#gh4 {
-  width: 16px;
-  height: 16px;
+.pac,
+.gh1,
+.gh2,
+.gh3,
+.gh4 {
+  background: url(/img/pacman_sprites.png);
+  width: calc(var(--mazeTileWidth)*2);
+  height: calc(var(--mazeTileHeight)*2);
+  /* padding-left: 8px;
+  padding-top: 8px;
+  margin-left: -8px;
+  margin-top: -8px; */
 }
 
-#pac {
-  background-image: url(/img/pacman_sprites.png) 0 0;
-  background-color: red;
+.pac {
+  background-position: 0 0;
+}
+
+.gh1 {
+  background-position: 0 -var(--mazeTileWidth);
+}
+
+.gh2 {
+  background-position: 0 calc(var(--mazeTileWidth) * -2);
+}
+
+.gh3 {
+  background-position: 0 calc(var(--mazeTileWidth) * -3);
+}
+
+.gh4 {
+  background-position: 0 calc(var(--mazeTileWidth) * -4);
 }
 
 /* GAME AREA */
