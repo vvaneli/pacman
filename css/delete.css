@@ -1,0 +1,42 @@
+/* TO BE DELETED */
+
+img, #gameCover {
+  /* opacity: 0.5; */
+}
+
+#game {
+  background-color: green;
+}
+
+#gameInfo1, #gameInfo2 {
+background: aqua;
+}
+#life {
+/* background-color: black; */
+}
+#instruct, #leader {
+  border: 1px dotted grey;
+  color: lightgrey;
+  /* width: calc(280px * 2); */
+}
+
+/* GAME AREA: during game */
+
+#gameMaze {
+  background-color: lightgray;
+}
+
+/* MEDIA QUERY */
+
+@media screen and (min-width: 449px) {
+  body {
+    background-color: lightsalmon;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  body {
+    background-color: red;
+  }
+}
+

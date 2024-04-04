@@ -22,8 +22,8 @@ const mazeSetup = {
   level: 1,
   mazeWidth: 28,
   mazeHeight: 31,
-  mazeTileWidthPx: 16,
-  mazeTileHeightPx: 16,
+  mazeTileWidthPx: '16px',
+  mazeTileHeightPx: '16px',
   mazeTilesPath: [],
   mazeTilesGhostHQ: [],
   mazeTilesWall: [],
@@ -105,9 +105,20 @@ let progressCounter = 0
 
 //? On Page Load
 
-function drawMaze() {
+// function drawMaze() {
+  for (let i = 0; i < (mazeSetup.mazeWidth * mazeSetup.mazeHeight); i++) {
+    const mazeTile = document.createElement('div')
+    mazeTile.innerText = i
+    mazeTile.dataset.index = i
+    mazeTile.classList.add('tile')
+    mazeTile.style.width = mazeSetup.mazeTileWidthPx
+    mazeTile.style.height = mazeSetup.mazeTileHeightPx
+    gameMazeEl.append(mazeTile)
+    // console.log(mazeTile)
+  }
+// }
 
-}
+
 
 //? Execution
 

@@ -1,38 +1,28 @@
 /* TO BE DELETED – START */
-
-img, #gameCover {
-  /* opacity: 0.5; */
+.tile {
+  border: 1px solid black;
+  font-size: 8px;
 }
-
-#game {
-  background-color: green;
-}
-
-#gameInfo1, #gameInfo2 {
-background: aqua;
-}
-#life {
-/* background-color: black; */
-}
-#instruct, #leader {
-  border: 1px dotted grey;
-  color: lightgrey;
-  /* width: calc(280px * 2); */
-}
-
 /* TO BE DELETED – END */
+
+body {
+  background-color: rgb(244, 202, 202);
+}
 
 
 html {
   --mazeWidth: 448px;
   --mazeHeight: 496px;
+  --mazeTileWidth: 16px;
+  --mazeTileHeight: 16px;
   --imgCoverWidth: 800px;
   --imgCoverHeight: 600px;
+  
 }
 
 * {
-  padding:0;
-  margin:0;
+  padding: 0;
+  margin: 0;
 }
 
 body {
@@ -45,16 +35,26 @@ body {
 
 /* FLEX CONTIANERS */
 
-main, #game, #gameCover, #gameInfo2 {
+main,
+#game,
+#gameCover,
+#gameInfo2 {
   display: flex;
   flex-direction: column;
 }
 
-main, #game {
+#gameMaze {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+main,
+#game {
   justify-content: center;
 }
 
-#gameInfo2, #gameCover {
+#gameInfo2,
+#gameCover {
   justify-content: space-between;
 }
 
@@ -64,7 +64,8 @@ main, #game {
 
 /* FLEX ITEMS */
 
-#instruct, #leader {
+#instruct,
+#leader {
   order: 1;
 }
 
@@ -74,47 +75,65 @@ h1 {
   /* padding: 1em 0; */
 }
 
+/* ACTORS */
 
+#pac,
+#gh1,
+#gh2,
+#gh3,
+#gh4 {
+  width: 16px;
+  height: 16px;
+}
+
+#pac {
+  background-image: url(/img/pacman_sprites.png) 0 0;
+  background-color: red;
+}
 
 /* GAME AREA */
 
-#game, #gameCover {
+#game,
+#gameCover {
   min-width: var(--mazeWidth);
   height: var(--imgCoverHeight);
 }
 
-#gameCover, #gameInfo1, #gameInfo2 {
+#gameCover,
+#gameInfo1,
+#gameInfo2 {
   width: 100%;
   max-width: var(--imgCoverWidth);
-  }
-
-#gameMaze {
-  min-width: var(--mazeWidth);
-  min-height: var(--mazeHeight);
-/* position: relative; */
 }
 
+#gameMaze {
+  width: var(--mazeWidth);
+  height: var(--mazeHeight);
+}
+
+
 /* GAME AREA: start and end of game */
+
+.tile {
+  box-sizing: border-box;
+  width: var(--mazeTileWidth);
+  height: var(--mazeTileHeight);
+}
 
 #gameCover {
   background-image: url(/img/game-start_800w600h.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: auto;
-  /* z-index: 1; */
   position: absolute
 }
 
 #imgCoverHeadline {
   margin: calc(var(--imgCoverHeight)/4) 0;
-  /* z-index: 2; */
-  /* position: absolute; */
   text-align: center;
 }
 
 #start {
-  /* z-index: 2; */
-  /* position: absolute; */
   margin: calc(var(--imgCoverHeight)/4) auto;
   width: calc(var(--mazeWidth)/2);
 
@@ -122,28 +141,21 @@ h1 {
 
 /* GAME AREA: during game */
 
-#gameMaze {
-  background-color: lightgray;
-}
-
-#life, #level {
-
-}
+/* #life, #level {} */
 
 /* SIDE PANELS */
 
-details > summary {
+details>summary {
   background-color: white;
   cursor: pointer;
   padding: 1em;
-  /* width: 100%; */
   text-align: left;
   /* border: none; */
   /* outline: none; */
   /* transition: 0.4s; */
 }
 
-details > div {
+details>div {
   padding: 1em;
   text-align: left;
 }
@@ -151,66 +163,64 @@ details > div {
 /* MEDIUM-WIDE SCREENS */
 
 /* @media screen and (min-width: 449px) and (max-width: 1199px) { */
-  @media screen and (min-width: 449px) {
-    body {
-      background-color: lightsalmon;
-    }
-  
-    #gameInfo1, #gameInfo2 {
-      flex-direction: row;
-    }
-  
-    #life {
-      order: 1;
-      flex-basis: var(--mazeWidth);
-    }
-  
-    #levelIcons {
-      order: 2;
-    }
-  
-    #level, #levelIcons {
-  /* width: calc((var(--imgCoverWidth)-var(--mazeWidth))/2); */
-  width: 176px;
-    }
-  
+@media screen and (min-width: 449px) {
+
+  #gameInfo1,
+  #gameInfo2 {
+    flex-direction: row;
   }
+
+  #life {
+    order: 1;
+    flex-basis: var(--mazeWidth);
+  }
+
+  #levelIcons {
+    order: 2;
+  }
+
+  #level,
+  #levelIcons {
+    /* width: calc((var(--imgCoverWidth)-var(--mazeWidth))/2); */
+    width: 176px;
+  }
+
+}
 
 /* WIDER SCREENS */
 
 @media screen and (min-width: 1200px) {
 
-  body {
-    background-color: red;
-  }
 
   /* FLEX CONTIANERS */
 
-main {
-  display: flex;
-  flex-direction: row;
+  main {
+    display: flex;
+    flex-direction: row;
+  }
+
+  /* FLEX ITEMS */
+
+  #instruct,
+  #leader {
+    order: 0;
+  }
+
+  /* PAGE ELEMENTS */
+
+  #game {
+    width: var(--imgCoverWidth);
+    height: var(--imgCoverHeight);
+  }
+
+  #imgCover {
+    left: 0;
+  }
+
+  #instruct,
+  #leader {
+    min-width: 200px;
+    height: var(--imgCoverHeight);
+  }
+
 }
-
-/* FLEX ITEMS */
-
-#instruct, #leader {
-  order: 0;
-}
-
-/* PAGE ELEMENTS */
-
-#game {
-  width: var(--imgCoverWidth);
-  height: var(--imgCoverHeight);
-}
-
-#imgCover {
-  left: 0;
-}
-
-#instruct, #leader {
-  min-width:200px;
-  height: var(--imgCoverHeight);
-  
-}
-
