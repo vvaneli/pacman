@@ -1,4 +1,4 @@
-//? Elements
+//? ELEMENTS
 
 // Start Game
 const startBtnEl = document.querySelector('#start')
@@ -14,7 +14,7 @@ const lifeTextEl = document.querySelector('#life')
 const levelTextEl = document.querySelector('#level')
 const levelIconsEl = document.querySelector('#levelIcons')
 
-//? Variables
+//? VARIABLES
 
 // 1 ––– SETUP
 
@@ -34,27 +34,27 @@ const mazeAlertText = {
   end: 'Game Over',
 }
 
-// characters' start positions and directions
+// characters' start tile and directions
 const actorsStateSetup = {
   pac: {
-    startTile: 657,
-    startDir: 'w',
+    tile: 657,
+    dir: 'w',
   },
   gh1: {
-    startTile: 321,
-    startDir: 'e',
+    tile: 321,
+    dir: 'e',
   },
   gh2: {
-    startTile: 403,
-    startDir: 'n',
+    tile: 403,
+    dir: 'n',
   },
   gh3: {
-    startTile: 405,
-    startDir: 's',
+    tile: 405,
+    dir: 's',
   },
   gh4: {
-    startTile: 407,
-    startDir: 'n',
+    tile: 407,
+    dir: 'n',
   },
 }
 
@@ -93,7 +93,6 @@ const timers = {
 let gameInProgress = false
 
 // At start, copy from var playerStateSetup
-
 let playerStateNow = {}
 
 // At start, copy from var actorsStateSetup
@@ -103,68 +102,104 @@ let ghStateNow = 'hunt'
 
 let progressCounter = 0
 
-//? On Page Load
+const mazeTileIndex = []
 
-// function drawMaze() {
-// draw the game tiles in the game grid
-for (let i = 0; i < (mazeSetup.mazeWidth * mazeSetup.mazeHeight); i++) {
-  const mazeTile = document.createElement('div')
-  mazeTile.innerText = i
-  mazeTile.dataset.index = i
-  mazeTile.classList.add('tile')
-  mazeTile.style.width = mazeSetup.mazeTileWidthPx
-  mazeTile.style.height = mazeSetup.mazeTileHeightPx
-  // place characters at their start positions
-  if (i === actorsStateSetup.pac.startTile) {
-    mazeTile.classList.add('pac')
-  }
-  if (i === actorsStateSetup.gh1.startTile) {
-    mazeTile.classList.add('gh1')
-  }
-  if (i === actorsStateSetup.gh2.startTile) {
-    mazeTile.classList.add('gh2')
-  }
-  if (i === actorsStateSetup.gh3.startTile) {
-    mazeTile.classList.add('gh3')
-  }
-  if (i === actorsStateSetup.gh4.startTile) {
-    mazeTile.classList.add('gh4')
-  }
-  // show in the html
-  gameMazeEl.append(mazeTile)
-  // console.log(mazeTile)
+let mazeTile = ''
+
+//? ON PAGE LOAD
+
+function onLoad() {
+  resetGame()
+  drawMaze()
 }
 
-// }
+//? EXECUTION
 
+// initialise variables for a new game
+function resetGame() {
+  actorsStateNow = {}
+  playerStateNow = {}
+  actorsStateNow = Object.assign({}, actorsStateSetup)
+  playerStateNow = Object.assign({}, playerStateSetup)
+}
 
-
-//? Execution
+// draw the game tiles in the game grid
+function drawMaze() {
+  for (let i = 0; i < (mazeSetup.mazeWidth * mazeSetup.mazeHeight); i++) {
+    mazeTile = document.createElement('div')
+    mazeTile.innerText = i
+    mazeTile.dataset.index = i
+    mazeTile.classList.add('tile')
+    mazeTile.style.width = mazeSetup.mazeTileWidthPx
+    mazeTile.style.height = mazeSetup.mazeTileHeightPx
+    mazeTileIndex.push(i) // add current index to the mazeTileIndex array
+    startPositions(i)
+    gameMazeEl.append(mazeTile) // show game setup on screen
+  }
+}
 
 function startGame() {
+  // resetGame()
+  // drawMaze()
+  showMaze()
+  // pacMoveCtrl()
+}
+
+// hide start button and cover panel
+function showMaze() {
   startBtnEl.setAttribute('disabled', true)
   startBtnEl.style.display = 'none'
   imgCoverHeadEl.style.display = 'none'
   gameCoverEl.style.display = 'none'
 }
 
-function pacMove(e) {
-  //  console.log(e)
+// place characters at their start positions
+function startPositions(i) {
+  if (i === actorsStateSetup.pac.tile) {
+    mazeTile.classList.add('pac')
+  } else if (i === actorsStateSetup.gh1.tile) {
+    mazeTile.classList.add('gh1')
+  } else if (i === actorsStateSetup.gh2.tile) {
+    mazeTile.classList.add('gh2')
+  } else if (i === actorsStateSetup.gh3.tile) {
+    mazeTile.classList.add('gh3')
+  } else if (i === actorsStateSetup.gh4.tile) {
+    mazeTile.classList.add('gh4')
+  }
+}
+
+// move pacman
+function pacMoveCtrl(e) {
+  // console.log(e)
+
+  if (e.key === 'ArrowUp' || e.key === 'w' || e.key === '8') {
+    // console.log('up')
+  } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === '6') {
+    (actorsStateNow.pac.tile)++
+    console.log(actorsStateNow.pac.tile)
+    // console.log(mazeTileIndex)
+  } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === '2') {
+    // console.log('down')
+  } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === '4') {
+    (actorsStateNow.pac.tile)--
+    console.log(actorsStateNow.pac.tile)
+  } else {
+    // console.log('key not assigned')
+  }
+
+}
+
+function pacMove(i) {
+  if (i === actorsStateNow.pac.tile) {
+    mazeTile.classList.add('pac')
+  }
 }
 
 
-//? Events
+//? EVENTS
+
 startBtnEl.addEventListener('click', startGame)
-document.addEventListener('keydown', pacMove)
+document.addEventListener('keydown', pacMoveCtrl)
+window.addEventListener('load', onLoad)
 
 // console.log()
-
-//? keycode
-// left arrow 	37
-// up arrow 	38
-// right arrow 	39
-// down arrow 	40
-// w = 87
-// a = 65
-// s = 83
-// d = 68
