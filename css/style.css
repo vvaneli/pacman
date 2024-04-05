@@ -150,7 +150,7 @@ h1 {
 }
 
 #gameCover {
-  background-image: url(/img/game-start_800w600h.png);
+  /* background-image: url(/img/game-start_800w600h.png); */
   background-position: center;
   background-repeat: no-repeat;
   background-size: auto;
@@ -170,7 +170,13 @@ h1 {
 
 /* GAME AREA: during game */
 
-/* #life, #level {} */
+#score::before {
+  /* content: 'Score: '; */
+}
+
+#level::before {
+  content: 'Level: ';
+}
 
 /* SIDE PANELS */
 

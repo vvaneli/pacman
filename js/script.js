@@ -78,6 +78,7 @@ const playerStateSetup = {
   score: 0,
   life: 3,
   level: 1,
+  levelIcons: '',
 }
 
 // timer setups in milliseconds
@@ -115,12 +116,31 @@ function onLoad() {
 
 //? EXECUTION
 
+function startGame() {
+  // resetGame()
+  // drawMaze()
+  showMaze()
+  showPlayerState()
+  // pacMoveCtrl()
+  gameInProgress = true
+  playerStateNow.playing = gameInProgress
+}
+
 // initialise variables for a new game
 function resetGame() {
+  // removeAllActors()
   actorsStateNow = {}
   playerStateNow = {}
   actorsStateNow = Object.assign({}, actorsStateSetup)
   playerStateNow = Object.assign({}, playerStateSetup)
+}
+
+// show player status
+function showPlayerState() {
+  scoreTextEl.innerText = playerStateNow.score
+  lifeTextEl.innerText = playerStateNow.life
+  levelTextEl.innerText = playerStateNow.level
+  levelIconsEl.innerText = playerStateNow.levelIcons
 }
 
 // draw the game tiles in the game grid
@@ -132,17 +152,10 @@ function drawMaze() {
     mazeTile.classList.add('tile')
     mazeTile.style.width = mazeSetup.mazeTileWidthPx
     mazeTile.style.height = mazeSetup.mazeTileHeightPx
-    mazeTileIndex.push(i) // add current index to the mazeTileIndex array
+    mazeTileIndex.push(mazeTile) // add current index to the mazeTileIndex array
     startPositions(i)
     gameMazeEl.append(mazeTile) // show game setup on screen
   }
-}
-
-function startGame() {
-  // resetGame()
-  // drawMaze()
-  showMaze()
-  // pacMoveCtrl()
 }
 
 // hide start button and cover panel
@@ -155,38 +168,47 @@ function showMaze() {
 
 // place characters at their start positions
 function startPositions(i) {
-  if (i === actorsStateSetup.pac.tile) {
+  if (i === actorsStateNow.pac.tile) {
     mazeTile.classList.add('pac')
-  } else if (i === actorsStateSetup.gh1.tile) {
+  } else if (i === actorsStateNow.gh1.tile) {
     mazeTile.classList.add('gh1')
-  } else if (i === actorsStateSetup.gh2.tile) {
+  } else if (i === actorsStateNow.gh2.tile) {
     mazeTile.classList.add('gh2')
-  } else if (i === actorsStateSetup.gh3.tile) {
+  } else if (i === actorsStateNow.gh3.tile) {
     mazeTile.classList.add('gh3')
-  } else if (i === actorsStateSetup.gh4.tile) {
+  } else if (i === actorsStateNow.gh4.tile) {
     mazeTile.classList.add('gh4')
   }
 }
 
+// clear tiles of all characters
+// function removeAllActors() {
+//   forEach
+//   mazeTile.classList.remove('pac')
+// }
+
 // move pacman
 function pacMoveCtrl(e) {
   // console.log(e)
-
   if (e.key === 'ArrowUp' || e.key === 'w' || e.key === '8') {
-    // console.log('up')
+    actorsStateNow.pac.tile -= mazeSetup.mazeWidth
+    mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac')
+    // console.log('up: ' + actorsStateNow.pac.tile)
   } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === '6') {
     (actorsStateNow.pac.tile)++
-    console.log(actorsStateNow.pac.tile)
-    // console.log(mazeTileIndex)
+    mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac')
+    // console.log('right: ' + actorsStateNow.pac.tile)
   } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === '2') {
-    // console.log('down')
+    actorsStateNow.pac.tile += mazeSetup.mazeWidth
+    mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac')
+    // console.log('down: ' + actorsStateNow.pac.tile)
   } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === '4') {
     (actorsStateNow.pac.tile)--
-    console.log(actorsStateNow.pac.tile)
+    mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac')
+    // console.log('left: ' + actorsStateNow.pac.tile)
   } else {
     // console.log('key not assigned')
   }
-
 }
 
 function pacMove(i) {
