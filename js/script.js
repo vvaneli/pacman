@@ -190,6 +190,7 @@ function startPositions(i) {
 // move pacman
 function pacMoveCtrl(e) {
   // console.log(e)
+  mazeTileIndex[actorsStateNow.pac.tile].classList.remove('pac')
   if (e.key === 'ArrowUp' || e.key === 'w' || e.key === '8') {
     actorsStateNow.pac.tile -= mazeSetup.mazeWidth
     mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac')
@@ -207,7 +208,7 @@ function pacMoveCtrl(e) {
     mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac')
     // console.log('left: ' + actorsStateNow.pac.tile)
   } else {
-    // console.log('key not assigned')
+    mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac') // put pacman back in same position if an unassigned key was pressed
   }
 }
 
