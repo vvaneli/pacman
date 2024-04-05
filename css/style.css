@@ -92,14 +92,18 @@ h1 {
   /* switch this on for position check only */
   background-color: rgba(161, 194, 87, 0.7);
 }
+.junction {
+    /* switch this on for position check only */
+  /* background-color: rgba(244, 76, 24, 0.7); */
+}
 
+.dot,
+.pow,
 .pac,
 .gh1,
 .gh2,
 .gh3,
-.gh4,
-.pow,
-.dot {
+.gh4 {
   background: url(/img/pacman_sprites.png);
 }
 

@@ -25,6 +25,7 @@ const mazeSetup = {
     mazeWidth: 29,
     mazeHeight: 31,
     mazeTilesPath: [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 59, 64, 70, 74, 80, 85, 88, 93, 99, 103, 109, 114, 117, 122, 128, 132, 138, 143, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 175, 180, 183, 193, 196, 201, 204, 209, 212, 222, 225, 230, 233, 234, 235, 236, 237, 238, 241, 242, 243, 244, 248, 249, 250, 251, 254, 255, 256, 257, 258, 259, 267, 273, 277, 283, 296, 302, 306, 312, 325, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 341, 354, 357, 367, 370, 383, 386, 396, 399, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 441, 444, 454, 457, 470, 473, 483, 486, 499, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 515, 528, 531, 541, 544, 557, 560, 570, 573, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 610, 615, 621, 625, 631, 636, 639, 644, 650, 654, 660, 665, 668, 669, 670, 673, 674, 675, 676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 692, 693, 694, 699, 702, 705, 715, 718, 721, 728, 731, 734, 744, 747, 750, 755, 756, 757, 758, 759, 760, 763, 764, 765, 766, 770, 771, 772, 773, 776, 777, 778, 779, 780, 781, 784, 795, 799, 810, 813, 824, 828, 839, 842, 843, 844, 845, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 867, 868],
+    mazeJunctions: [30, 35, 41, 45, 51, 56, 146, 151, 154, 157, 161, 164, 167, 172, 233, 238, 241, 244, 248, 251, 254, 259, 328, 331, 335, 338, 412, 415, 425, 428, 502, 512, 581, 586, 589, 592, 596, 599, 602, 607, 668, 670, 673, 676, 679, 683, 686, 689, 692, 694, 755, 757, 760, 763, 766, 770, 773, 776, 779, 781, 842, 853, 857, 868],
     mazeTilesGhostHQ: [361, 362, 363, 389, 389, 390, 391, 392, 393, 418, 419, 420, 421, 422, 447, 448, 449, 450, 451],
     mazeTilesWall: [],
   },
@@ -164,6 +165,7 @@ function drawMaze() {
     gameMazeEl.append(mazeTile) // show game setup on screen
   }
   addPaths()
+  addJunctions()
   addGhostHQ()
   addItems()
   startPositions()
@@ -183,6 +185,13 @@ function addItems() {
 function addPaths() {
   mazeSetup[gameLevelNow].mazeTilesPath.forEach(function (f) {
     mazeTileIndex[f].classList.add('path')
+  })
+}
+
+// define junctions
+function addJunctions() {
+  mazeSetup[gameLevelNow].mazeJunctions.forEach(function (j) {
+    mazeTileIndex[j].classList.add('junction')
   })
 }
 
@@ -232,7 +241,6 @@ function pacMoveCtrl(e) {
     mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
   }
 }
-// if (mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.contains('path')){}
 
 // pac move directions
 function pacMoveN() {
@@ -265,9 +273,9 @@ function pacMoveE() {
   for (let m = 0; m < mazeSetup[gameLevelNow].mazeWidth; m++) {
     setTimeout(function () {
       if (mazeTileIndex[(actorsStateNow[gameLevelNow].pac.tile) - 1].classList.contains('path')) {
-      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac');
-      (actorsStateNow[gameLevelNow].pac.tile)--;
-      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac');
+        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac');
+        (actorsStateNow[gameLevelNow].pac.tile)--;
+        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac');
       }
       // console.log('right: ' + actorsStateNow[gameLevelNow].pac.tile)
     }, timers.pacMoveSpeed * m)
@@ -278,10 +286,10 @@ function pacMoveW() {
   for (let m = 0; m < mazeSetup[gameLevelNow].mazeWidth; m++) {
     setTimeout(function () {
       if (mazeTileIndex[(actorsStateNow[gameLevelNow].pac.tile) + 1].classList.contains('path')) {
-      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac');
-      (actorsStateNow[gameLevelNow].pac.tile)++;
-      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac');
-    }
+        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac');
+        (actorsStateNow[gameLevelNow].pac.tile)++;
+        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac');
+      }
       // console.log('left: ' + actorsStateNow[gameLevelNow].pac.tile)
     }, timers.pacMoveSpeed * m)
   }
