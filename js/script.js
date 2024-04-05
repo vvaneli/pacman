@@ -24,8 +24,8 @@ const mazeSetup = {
   level1: {
     mazeWidth: 29,
     mazeHeight: 31,
-    mazeTilesPath: [],
-    mazeTilesGhostHQ: [],
+    mazeTilesPath: [30,31,32,33,34,35,36,37,38,39,40,41,45,46,47,48,49,50,51,52,53,54,55,56,59,64,70,74,80,85,88,93,99,103,109,114,117,122,128,132,138,143,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,175,180,183,193,196,201,204,209,212,222,225,230,233,234,235,236,237,238,241,242,243,244,248,249,250,251,254,255,256,257,258,259,267,273,277,283,296,302,306,312,325,328,329,330,331,332,333,334,335,336,337,338,341,354,357,367,370,383,386,396,399,406,407,408,409,410,411,412,413,414,415,425,426,427,428,429,430,431,432,433,434,441,444,454,457,470,473,483,486,499,502,503,504,505,506,507,508,509,510,511,512,515,528,531,541,544,557,560,570,573,581,582,583,584,585,586,587,588,589,590,591,592,596,597,598,599,600,601,602,603,604,605,606,607,610,615,621,625,631,636,639,644,650,654,660,665,668,669,670,673,674,675,676,677,678,679,680,681,682,683,684,685,686,687,688,689,692,693,694,699,702,705,715,718,721,728,731,734,744,747,750,755,756,757,758,759,760,763,764,765,766,770,771,772,773,776,777,778,779,780,781,784,795,799,810,813,824,828,839,842,843,844,845,846,847,848,849,850,851,852,853,854,855,856,857,858,859,860,861,862,863,864,865,866,867,868],
+    mazeTilesGhostHQ: [358, 359, 360, 361, 362, 363, 364, 365, 366, 387, 395, 416, 424, 445, 453, 474, 475, 476, 477, 478, 479, 480, 481, 482],
     mazeTilesWall: [],
   },
 }
@@ -35,7 +35,7 @@ const mazeAlertText = {
   end: 'Game Over',
 }
 
-// characters' start tile and directions
+// characters' start tiles and directions
 const actorsStateSetup = {
   level1: {
     pac: {
@@ -62,8 +62,8 @@ const actorsStateSetup = {
 }
 
 const itemsSetup = {
-  dots: [],
-  pow: [],
+  dots: [30,31,32,33,34,35,36,37,38,39,40,41,45,46,47,48,49,50,51,52,53,54,55,56,59,64,70,74,80,85,93,99,103,109,117,122,128,132,138,143,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,175,180,183,193,196,201,204,209,212,222,225,230,233,234,235,236,237,238,241,242,243,244,248,249,250,251,254,255,256,257,258,259,267,283,296,312,325,341,354,370,383,399,412,428,441,457,470,486,499,515,528,544,557,573,581,582,583,584,585,586,587,588,589,590,591,592,596,597,598,599,600,601,602,603,604,605,606,607,610,615,621,625,631,636,639,644,650,654,660,665,669,670,673,674,675,676,677,678,679,683,684,685,686,687,688,689,692,693,699,702,705,715,718,721,728,731,734,744,747,750,755,756,757,758,759,760,763,764,765,766,770,771,772,773,776,777,778,779,780,781,784,795,799,810,813,824,828,839,842,843,844,845,846,847,848,849,850,851,852,853,854,855,856,857,858,859,860,861,862,863,864,865,866,867,868],
+  pow: [88, 114, 668, 694],
 }
 
 // ghost status options
@@ -76,6 +76,7 @@ const scoreSetup = {
   ghosts: [200, 4000, 800, 1600],
 }
 
+// player start status
 const playerStateSetup = {
   playing: false,
   score: 0,
@@ -88,15 +89,17 @@ const playerStateSetup = {
 const timers = {
   startGamePause: 3000,
   endGamePause: 3000,
+  pacMoveSpeed: 500,
+  ghMoveSpeed: 500,
   ghFlee1Duration: 4000,
   ghFlee2Duration: 3000,
 }
 
 // 2 ––– PLAY
 
-// At start, copy from var playerStateSetup
+// at game start, copy from var playerStateSetup
 let playerStateNow = {}
-// At start, copy from var actorsStateSetup
+// at game start, copy from var actorsStateSetup
 let actorsStateNow = {}
 
 let gameInProgress = false
@@ -107,6 +110,7 @@ let ghStateNow = 'hunt'
 const mazeTileIndex = []
 
 let mazeTile = ''
+let randomDir = ''
 
 //? ON PAGE LOAD
 
@@ -122,9 +126,10 @@ function startGame() {
   // drawMaze()
   showMaze()
   showPlayerState()
-  // pacMoveCtrl()
   gameInProgress = true
   playerStateNow.playing = gameInProgress
+  pacMoveNow()
+  // gh1Move()
 }
 
 // initialise variables for a new game
@@ -136,15 +141,16 @@ function resetGame() {
   playerStateNow = Object.assign({}, playerStateSetup)
 }
 
-// show player status
+// show current score and game level
 function showPlayerState() {
   scoreTextEl.innerText = playerStateNow.score
   lifeTextEl.innerText = playerStateNow.life
+  levelTextEl.classList.add('levelNow')
   levelTextEl.innerText = playerStateNow.level
   levelIconsEl.innerText = playerStateNow.levelIcons
 }
 
-// draw the game tiles in the game grid
+// draw the game tiles in the game grid, add actors at start positions
 function drawMaze() {
   for (let i = 0; i < (mazeSetup[gameLevelNow].mazeWidth * mazeSetup[gameLevelNow].mazeHeight); i++) {
     mazeTile = document.createElement('div')
@@ -154,8 +160,8 @@ function drawMaze() {
     mazeTile.style.width = mazeSetup.mazeTileWidthPx
     mazeTile.style.height = mazeSetup.mazeTileHeightPx
     mazeTileIndex.push(mazeTile) // add current index to the mazeTileIndex array
-    startPositions(i)
     gameMazeEl.append(mazeTile) // show game setup on screen
+    startPositions(i)
   }
 }
 
@@ -193,39 +199,88 @@ function pacMoveCtrl(e) {
   // console.log(e)
   mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac')
   if (e.key === 'ArrowUp' || e.key === 'w' || e.key === '8') {
-    actorsStateNow[gameLevelNow].pac.tile -= mazeSetup[gameLevelNow].mazeWidth
-    mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
-    // console.log('up: ' + actorsStateNow[gameLevelNow].pac.tile)
-  } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === '6') {
-    (actorsStateNow[gameLevelNow].pac.tile)++
-    mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
-    // console.log('right: ' + actorsStateNow[gameLevelNow].pac.tile)
+    pacMoveN()
   } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === '2') {
-    actorsStateNow[gameLevelNow].pac.tile += mazeSetup[gameLevelNow].mazeWidth
-    mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
-    // console.log('down: ' + actorsStateNow[gameLevelNow].pac.tile)
+    pacMoveS()
   } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === '4') {
-    (actorsStateNow[gameLevelNow].pac.tile)--
-    mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
-    // console.log('left: ' + actorsStateNow[gameLevelNow].pac.tile)
+    pacMoveE()
+  } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === '6') {
+    pacMoveW()
   } else {
     mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac') // put pacman back in same position if an unassigned key was pressed
   }
 }
 
-// function pacMove(i) {
-// }
+// pac move directions
+function pacMoveN() {
+  actorsStateNow[gameLevelNow].pac.tile -= mazeSetup[gameLevelNow].mazeWidth
+  mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
+  // console.log('up: ' + actorsStateNow[gameLevelNow].pac.tile)
+}
+function pacMoveS() {
+  actorsStateNow[gameLevelNow].pac.tile += mazeSetup[gameLevelNow].mazeWidth
+  mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
+  // console.log('down: ' + actorsStateNow[gameLevelNow].pac.tile)
+}
+function pacMoveE() {
+  (actorsStateNow[gameLevelNow].pac.tile)--
+  mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
+  // console.log('left: ' + actorsStateNow[gameLevelNow].pac.tile)
+}
+function pacMoveW() {
+  (actorsStateNow[gameLevelNow].pac.tile)++
+  mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
+  // console.log('right: ' + actorsStateNow[gameLevelNow].pac.tile)
+}
+
+// mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.contains('pac')
 
 // move ghosts randomly
-function ghMove() {
+function gh1Move() {
+  mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.remove('gh1')
+  getRandomDir()
 
 }
 
+function gh1MoveN() {
+  actorsStateNow[gameLevelNow].gh1.tile -= mazeSetup[gameLevelNow].mazeWidth
+  mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.add('gh1')
+}
+function gh1MoveS() {
+  actorsStateNow[gameLevelNow].gh1.tile += mazeSetup[gameLevelNow].mazeWidth
+  mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.add('gh1')
+}
+function gh1MoveE() {
+  (actorsStateNow[gameLevelNow].gh1.tile)--
+  mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.add('gh1')
+}
+function gh1MoveW() {
+  (actorsStateNow[gameLevelNow].gh1.tile)++
+  mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.add('gh1')
+}
+
+// get a random direction of travel
+// Ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#getting_a_random_integer_between_two_values_inclusive
+function getRandomDir() {
+  const minCeiled = Math.ceil(1)
+  const maxFloored = Math.floor(4)
+  switch (Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)) {
+    case 1: randomDir = 'n'
+      break
+    case 2: randomDir = 'e'
+      break
+    case 3: randomDir = 's'
+      break
+    case 4: randomDir = 'w'
+      break
+    default: randomDir = 'w'
+  }
+}
 
 //? EVENTS
 
 startBtnEl.addEventListener('click', startGame)
-document.addEventListener('keydown', pacMoveCtrl)
+function pacMoveNow() {
+  document.addEventListener('keydown', pacMoveCtrl)
+}
 window.addEventListener('load', onLoad)
-
-// console.log()
