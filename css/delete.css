@@ -28,7 +28,7 @@ background: aqua;
 
 /* MEDIA QUERY */
 
-@media screen and (min-width: 449px) {
+@media screen and (min-width: 464px) {
   body {
     background-color: lightsalmon;
   }

@@ -20,7 +20,7 @@ const levelIconsEl = document.querySelector('#levelIcons')
 
 const mazeSetup = {
   level: 1,
-  mazeWidth: 28,
+  mazeWidth: 29,
   mazeHeight: 31,
   mazeTileWidthPx: '16px',
   mazeTileHeightPx: '16px',

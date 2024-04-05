@@ -3,7 +3,7 @@
 .tile {
   border: 1px solid white;
   color: white;
-  /* opacity: 30%; */
+  opacity: 30%;
   font-size: 8px;
 }
 
@@ -12,7 +12,7 @@ body {
 }
 
 #gameMaze {
-  background-image: url(/img/PacMan_Maze_224w248h.png);
+  background-image: url(/img/PacMan_Maze_232w248h.png);
   background-repeat: no-repeat;
   background-size: 100%;
 }
@@ -20,8 +20,8 @@ body {
 /* TO BE DELETED – END */
 
 html {
-  --mazeWidth: 448px;
-  --mazeHeight: 496px;
+  --mazeWidth: 464px;  /* 29*16px Also update value in media querys */
+  --mazeHeight: 496px;  /* 31*16px */
   --mazeTileWidth: 16px;
   --mazeTileHeight: 16px;
   --imgCoverWidth: 800px;
@@ -197,8 +197,8 @@ details>div {
 
 /* MEDIUM-WIDE SCREENS */
 
-/* @media screen and (min-width: 449px) and (max-width: 1199px) { */
-@media screen and (min-width: 449px) {
+/* @media screen and (min-width: 464px) and (max-width: 1199px) { */
+@media screen and (min-width: 464px) {
 
   #gameInfo1,
   #gameInfo2 {
