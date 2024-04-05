@@ -37,23 +37,33 @@ const mazeAlertText = {
 // characters' start tile and directions
 const actorsStateSetup = {
   pac: {
-    tile: 657,
+    tile: {
+      level1: 681,
+    },
     dir: 'w',
   },
   gh1: {
-    tile: 321,
+    tile: {
+      level1: 333,
+    },
     dir: 'e',
   },
   gh2: {
-    tile: 403,
+    tile: {
+      level1: 418,
+    },
     dir: 'n',
   },
   gh3: {
-    tile: 405,
+    tile: {
+      level1: 420,
+    },
     dir: 's',
   },
   gh4: {
-    tile: 407,
+    tile: {
+      level1: 422,
+    },
     dir: 'n',
   },
 }
@@ -168,15 +178,15 @@ function showMaze() {
 
 // place characters at their start positions
 function startPositions(i) {
-  if (i === actorsStateNow.pac.tile) {
+  if (i === actorsStateNow.pac.tile.level1) {
     mazeTile.classList.add('pac')
-  } else if (i === actorsStateNow.gh1.tile) {
+  } else if (i === actorsStateNow.gh1.tile.level1) {
     mazeTile.classList.add('gh1')
-  } else if (i === actorsStateNow.gh2.tile) {
+  } else if (i === actorsStateNow.gh2.tile.level1) {
     mazeTile.classList.add('gh2')
-  } else if (i === actorsStateNow.gh3.tile) {
+  } else if (i === actorsStateNow.gh3.tile.level1) {
     mazeTile.classList.add('gh3')
-  } else if (i === actorsStateNow.gh4.tile) {
+  } else if (i === actorsStateNow.gh4.tile.level1) {
     mazeTile.classList.add('gh4')
   }
 }
@@ -190,30 +200,30 @@ function startPositions(i) {
 // move pacman
 function pacMoveCtrl(e) {
   // console.log(e)
-  mazeTileIndex[actorsStateNow.pac.tile].classList.remove('pac')
+  mazeTileIndex[actorsStateNow.pac.tile.level1].classList.remove('pac')
   if (e.key === 'ArrowUp' || e.key === 'w' || e.key === '8') {
-    actorsStateNow.pac.tile -= mazeSetup.mazeWidth
-    mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac')
-    // console.log('up: ' + actorsStateNow.pac.tile)
+    actorsStateNow.pac.tile.level1 -= mazeSetup.mazeWidth
+    mazeTileIndex[actorsStateNow.pac.tile.level1].classList.add('pac')
+    // console.log('up: ' + actorsStateNow.pac.tile.level1)
   } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === '6') {
-    (actorsStateNow.pac.tile)++
-    mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac')
-    // console.log('right: ' + actorsStateNow.pac.tile)
+    (actorsStateNow.pac.tile.level1)++
+    mazeTileIndex[actorsStateNow.pac.tile.level1].classList.add('pac')
+    // console.log('right: ' + actorsStateNow.pac.tile.level1)
   } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === '2') {
-    actorsStateNow.pac.tile += mazeSetup.mazeWidth
-    mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac')
-    // console.log('down: ' + actorsStateNow.pac.tile)
+    actorsStateNow.pac.tile.level1 += mazeSetup.mazeWidth
+    mazeTileIndex[actorsStateNow.pac.tile.level1].classList.add('pac')
+    // console.log('down: ' + actorsStateNow.pac.tile.level1)
   } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === '4') {
-    (actorsStateNow.pac.tile)--
-    mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac')
-    // console.log('left: ' + actorsStateNow.pac.tile)
+    (actorsStateNow.pac.tile.level1)--
+    mazeTileIndex[actorsStateNow.pac.tile.level1].classList.add('pac')
+    // console.log('left: ' + actorsStateNow.pac.tile.level1)
   } else {
-    mazeTileIndex[actorsStateNow.pac.tile].classList.add('pac') // put pacman back in same position if an unassigned key was pressed
+    mazeTileIndex[actorsStateNow.pac.tile.level1].classList.add('pac') // put pacman back in same position if an unassigned key was pressed
   }
 }
 
 function pacMove(i) {
-  if (i === actorsStateNow.pac.tile) {
+  if (i === actorsStateNow.pac.tile.level1) {
     mazeTile.classList.add('pac')
   }
 }
@@ -226,3 +236,6 @@ document.addEventListener('keydown', pacMoveCtrl)
 window.addEventListener('load', onLoad)
 
 // console.log()
+
+const lev = 1
+console.log(actorsStateNow.pac.tile.level[lev])
