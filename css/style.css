@@ -1,8 +1,8 @@
 /* TO BE DELETED – START */
 
 .tile {
-  border: 1px solid rgba(255,255,255,0.4);
-  color: rgba(255,255,255,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.4);
   /* opacity: 30%; */
   font-size: 8px;
 }
@@ -23,7 +23,7 @@ html {
   /* 29 tile width x 16px –– Also update value in media query screen width */
   --mazeWidth: 464px;
   /* 31 tile height x 16px */
-  --mazeHeight: 496px;  
+  --mazeHeight: 496px;
   --mazeTileWidth: 16px;
   --mazeTileHeight: 16px;
   --imgCoverWidth: 800px;
@@ -88,38 +88,49 @@ h1 {
 /* ACTORS */
 /* background-position: <pixels shifted right>px <pixels shifted down>px; */
 
+.path, .ghostHQ {
+  /* switch this on for position check only */
+  background-color: rgba(161, 194, 87, 0.7);
+}
+
+.pac,
+.gh1,
+.gh2,
+.gh3,
+.gh4,
+.pow,
+.dot {
+  background: url(/img/pacman_sprites.png);
+}
+
 .pac,
 .gh1,
 .gh2,
 .gh3,
 .gh4 {
-  background: url(/img/pacman_sprites.png);
-  width: calc(var(--mazeTileWidth)*2);
-  height: calc(var(--mazeTileHeight)*2);
-  /* padding-left: 8px;
-  padding-top: 8px;
-  margin-left: -8px;
-  margin-top: -8px; */
+  scale: 1.5;
 }
 
-.pac {
-  background-position: 0 0;
+.dot {
+  background-position: 0 calc(var(--mazeTileWidth) * -6);
 }
-
+.pow {
+  background-position: 0 calc(var(--mazeTileWidth) * -7);
+}
 .gh1 {
   background-position: 0 calc(var(--mazeTileWidth) * -1);
 }
-
 .gh2 {
   background-position: 0 calc(var(--mazeTileWidth) * -2);
 }
-
 .gh3 {
   background-position: 0 calc(var(--mazeTileWidth) * -3);
 }
-
 .gh4 {
   background-position: 0 calc(var(--mazeTileWidth) * -4);
+}
+.pac {
+  background-position: 0 0;
 }
 
 /* GAME AREA */
@@ -224,10 +235,21 @@ details>div {
 
 }
 
+/* EASTER EGG */
+
+@media screen and (min-width: 1980px) and (max-width: 1980px) {
+  body {
+    background-color: yellow;
+  }
+
+  #game {
+    rotate: 20deg;
+  }
+}
+
 /* WIDER SCREENS */
 
 @media screen and (min-width: 1200px) {
-
 
   /* FLEX CONTIANERS */
 
