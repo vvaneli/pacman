@@ -20,8 +20,10 @@ body {
 /* TO BE DELETED – END */
 
 html {
-  --mazeWidth: 464px;  /* 29*16px Also update value in media querys */
-  --mazeHeight: 496px;  /* 31*16px */
+  /* 29 tile width x 16px –– Also update value in media query screen width */
+  --mazeWidth: 464px;
+  /* 31 tile height x 16px */
+  --mazeHeight: 496px;  
   --mazeTileWidth: 16px;
   --mazeTileHeight: 16px;
   --imgCoverWidth: 800px;
