@@ -266,6 +266,8 @@ function pacMoveCtrl(e) {
 }
 
 // check if pacman is at portal tile (406, 434)
+// mazeSetup[levelNow].mazePortals.portal1[0]
+// mazeSetup[levelNow].mazePortals.portal1[1]
 // if (mazeTileIndex[mazeSetup[levelNow].mazePortals.portal1[1]].classList.contains('pac')) {
 //   mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac');
 //   (actorsStateNow[levelNow].pac.tile) = (mazeSetup[levelNow].mazePortals.portal1[0]);
@@ -273,8 +275,8 @@ function pacMoveCtrl(e) {
 // } else {
 
 // if (actorsStateNow[levelNow].pac.tile === 406) {
-  // actorsStateNow[levelNow].pac.tile = 434
-// }
+// actorsStateNow[levelNow].pac.tile = 434
+// } else
 
 // if (mazeTileIndex[406].classList.contains('pac')) {
 //   mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac');
@@ -316,7 +318,11 @@ function pacMoveS() {
 }
 function pacMoveE() {
   pacMoveInterval = setInterval(function () {
-    if (mazeTileIndex[(actorsStateNow[levelNow].pac.tile) + 1].classList.contains('path')) {
+    if (actorsStateNow[levelNow].pac.tile === mazeSetup[levelNow].mazePortals.portal1[1]) {
+      mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac');
+      actorsStateNow[levelNow].pac.tile = mazeSetup[levelNow].mazePortals.portal1[0]
+      mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac');
+    } else if (mazeTileIndex[(actorsStateNow[levelNow].pac.tile) + 1].classList.contains('path')) {
       eatItems()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac');
       (actorsStateNow[levelNow].pac.tile)++;
@@ -329,7 +335,11 @@ function pacMoveE() {
 }
 function pacMoveW() {
   pacMoveInterval = setInterval(function () {
-    if (mazeTileIndex[(actorsStateNow[levelNow].pac.tile) - 1].classList.contains('path')) {
+    if (actorsStateNow[levelNow].pac.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
+      mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac');
+      actorsStateNow[levelNow].pac.tile = mazeSetup[levelNow].mazePortals.portal1[1]
+      mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac');
+    } else if (mazeTileIndex[(actorsStateNow[levelNow].pac.tile) - 1].classList.contains('path')) {
       eatItems()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac');
       (actorsStateNow[levelNow].pac.tile)--;
