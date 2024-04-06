@@ -46,8 +46,10 @@ const actorsStateSetup = {
       dir: 'w',
     },
     gh1: {
-      tile: 333,
+      // tile: 333,
       // tile: 586,  // for testing only
+      // tile: 409,  // near left portal
+      tile: 431,  // near right portal
       dir: 'e',
     },
     gh2: {
@@ -415,20 +417,32 @@ function gh1MoveS() {
 function gh1MoveE() {
   gh1MoveInterval = setInterval(function () {
     // console.log('gh1 E1: ' + gh1MoveInterval)
-    if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('ghotHQ'))) {
+    // first check if ghost is at the right portal tile
+    if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[1]) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
-      (actorsStateNow[levelNow].gh1.tile)--;
+      actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[0]
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
-    } else {
-      clearInterval(gh1MoveInterval)
-      gh1Move() // choose a new direction
-    }
+    } else
+      if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('ghotHQ'))) {
+        mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
+        (actorsStateNow[levelNow].gh1.tile)--;
+        mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
+      } else {
+        clearInterval(gh1MoveInterval)
+        gh1Move() // choose a new direction
+      }
   }, timers.ghMoveSpeed)
   // console.log('gh1 E2: ' + gh1MoveInterval)
 }
 function gh1MoveW() {
   gh1MoveInterval = setInterval(function () {
     // console.log('gh1 W1: ' + gh1MoveInterval)
+    // first check if ghost is at the left portal tile
+    // if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
+    //   mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
+    //   actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1]
+    //   mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
+    // } else
     if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('ghotHQ'))) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
       (actorsStateNow[levelNow].gh1.tile)++;
@@ -439,6 +453,16 @@ function gh1MoveW() {
     }
   }, timers.ghMoveSpeed)
   // console.log('gh1 W2: ' + gh1MoveInterval)
+}
+function gh1MoveWPortal() {
+  if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
+    mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
+    actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1]
+    mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
+    gh1MoveW()
+  } else {
+    gh1MoveW()
+  }
 }
 
 // pac eats dots
