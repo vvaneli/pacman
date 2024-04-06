@@ -308,13 +308,9 @@ function pacMoveW() {
 
 // mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.contains('pac')
 
-// move ghosts randomly
+// move ghost 1 randomly
 function gh1Move() {
-  // mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.remove('gh1')
-  // switch (actorsStateNow[gameLevelNow].gh1.dir = getRandomDir()) {
-  // let gh1RandomDir = 
-  // console.log(getRandomDir())
-  switch (actorsStateNow[gameLevelNow].gh1.dir = 'w') {
+  switch (actorsStateNow[gameLevelNow].gh1.dir = getRandomDir()) {
     case 'n': gh1MoveN()
       break
     case 's': gh1MoveS()
@@ -352,7 +348,7 @@ function gh1MoveS() {
     console.log('gh1 S1: ' + gh1MoveInterval)
     // actorsStateNow[gameLevelNow].gh1.tile += mazeSetup[gameLevelNow].mazeWidth
     // mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.add('gh1')
-    if ((mazeTileIndex[(actorsStateNow[gameLevelNow].gh1.tile) + (mazeSetup[gameLevelNow].mazeWidth)].classList.contains('path'))) {
+    if (mazeTileIndex[(actorsStateNow[gameLevelNow].gh1.tile) + (mazeSetup[gameLevelNow].mazeWidth)].classList.contains('path')) {
       mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.remove('gh1')
       actorsStateNow[gameLevelNow].gh1.tile += mazeSetup[gameLevelNow].mazeWidth
       mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.add('gh1')
@@ -404,15 +400,11 @@ function getRandomDir() {
   const minCeiled = Math.ceil(1)
   const maxFloored = Math.floor(4)
   switch (Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)) {
-    case 1: randomDir = 'n'
-      break
-    case 2: randomDir = 'e'
-      break
-    case 3: randomDir = 's'
-      break
-    case 4: randomDir = 'w'
-      break
-    default: randomDir = 'w'
+    case 1: return randomDir = 'n'
+    case 2: return randomDir = 's'
+    case 3: return randomDir = 'e'
+    case 4: return randomDir = 'w'
+    default: return randomDir = 'w'
   }
 }
 
