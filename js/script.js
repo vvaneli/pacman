@@ -338,7 +338,7 @@ function gh1MoveN() {
     } else {
       clearInterval(gh1MoveInterval)
 
-      // gh1Move() // choose a new direction
+      gh1Move() // choose a new direction
     }
   }, timers.ghMoveSpeed)
   console.log('gh1 N2: ' + gh1MoveInterval)
@@ -354,7 +354,7 @@ function gh1MoveS() {
       mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.add('gh1')
     } else {
       clearInterval(gh1MoveInterval)
-      // gh1Move() // choose a new direction
+      gh1Move() // choose a new direction
     }
 
   }, timers.ghMoveSpeed)
@@ -372,7 +372,7 @@ function gh1MoveE() {
       mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.add('gh1');
     } else {
       clearInterval(gh1MoveInterval)
-      //       // gh1Move() // choose a new direction
+      gh1Move() // choose a new direction
     }
   }, timers.ghMoveSpeed)
   console.log('gh1 E2: ' + gh1MoveInterval)
@@ -388,7 +388,7 @@ function gh1MoveW() {
       mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.add('gh1');
     } else {
       clearInterval(gh1MoveInterval)
-      // gh1Move() // choose a new direction
+      gh1Move() // choose a new direction
     }
   }, timers.ghMoveSpeed)
   console.log('gh1 W2: ' + gh1MoveInterval)
