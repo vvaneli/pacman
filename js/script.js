@@ -91,8 +91,8 @@ const playerStateSetup = {
 const timers = {
   startGamePause: 3000,
   endGamePause: 3000,
-  pacMoveSpeed: 300,
-  ghMoveSpeed: 300,
+  pacMoveSpeed: 100,
+  ghMoveSpeed: 100,
   ghFlee1Duration: 4000,
   ghFlee2Duration: 3000,
 }
@@ -113,6 +113,12 @@ let mazeTileIndex = []
 
 let mazeTile = ''
 let randomDir = ''
+
+let pacMoveInterval
+let gh1MoveInterval
+let gh2MoveInterval
+let gh3MoveInterval
+let gh4MoveInterval
 
 //? ON PAGE LOAD
 
@@ -228,13 +234,18 @@ function showMaze() {
 // move pacman
 function pacMoveCtrl(e) {
   // console.log(e)
+  clearInterval(pacMoveInterval)
   if (e.key === 'ArrowUp' || e.key === 'w' || e.key === '8') {
+    // clearInterval(pacMoveInterval)
     pacMoveN()
   } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === '2') {
+    // clearInterval(pacMoveInterval)
     pacMoveS()
   } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === '4') {
+    // clearInterval(pacMoveInterval)
     pacMoveE()
   } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === '6') {
+    // clearInterval(pacMoveInterval)
     pacMoveW()
   } else {
     // put pacman back in same position if an unassigned key was pressed
@@ -244,57 +255,59 @@ function pacMoveCtrl(e) {
 
 // pac move directions
 function pacMoveN() {
-  for (let m = 0; m < mazeSetup[gameLevelNow].mazeHeight; m++) {
-    setTimeout(function () {
-      if (mazeTileIndex[(actorsStateNow[gameLevelNow].pac.tile) - (mazeSetup[gameLevelNow].mazeWidth)].classList.contains('path')) {
-        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac')
-        actorsStateNow[gameLevelNow].pac.tile -= mazeSetup[gameLevelNow].mazeWidth
-        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
-      }
-      // console.log('up: ' + actorsStateNow[gameLevelNow].pac.tile)
-    }, timers.pacMoveSpeed * m)
-  }
+  pacMoveInterval = setInterval(function () {
+    if (mazeTileIndex[(actorsStateNow[gameLevelNow].pac.tile) - (mazeSetup[gameLevelNow].mazeWidth)].classList.contains('path')) {
+      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac')
+      actorsStateNow[gameLevelNow].pac.tile -= mazeSetup[gameLevelNow].mazeWidth
+      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
+    }
+    //  else {
+    //   clearInterval(pacMoveInterval)
+    // }
+    // console.log('up: ' + actorsStateNow[gameLevelNow].pac.tile)
+  }, timers.pacMoveSpeed)
 }
-
 function pacMoveS() {
-  for (let m = 0; m < mazeSetup[gameLevelNow].mazeHeight; m++) {
-    setTimeout(function () {
-      if ((mazeTileIndex[(actorsStateNow[gameLevelNow].pac.tile) + (mazeSetup[gameLevelNow].mazeWidth)].classList.contains('path'))) {
-        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac')
-        actorsStateNow[gameLevelNow].pac.tile += mazeSetup[gameLevelNow].mazeWidth
-        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
-      }
-      // console.log('down: ' + actorsStateNow[gameLevelNow].pac.tile)
-    }, timers.pacMoveSpeed * m)
-  }
+  pacMoveInterval = setInterval(function () {
+    // console.log('down ' + pacMoveInterval)
+    if ((mazeTileIndex[(actorsStateNow[gameLevelNow].pac.tile) + (mazeSetup[gameLevelNow].mazeWidth)].classList.contains('path'))) {
+      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac')
+      actorsStateNow[gameLevelNow].pac.tile += mazeSetup[gameLevelNow].mazeWidth
+      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac')
+    }
+    //  else {
+    //   clearInterval(pacMoveInterval)
+    // }
+    // console.log('down: ' + actorsStateNow[gameLevelNow].pac.tile)
+  }, timers.pacMoveSpeed)
+  // console.log(pacMoveInterval)
 }
-
 function pacMoveE() {
-  for (let m = 0; m < mazeSetup[gameLevelNow].mazeWidth; m++) {
-    setTimeout(function () {
-      if (mazeTileIndex[(actorsStateNow[gameLevelNow].pac.tile) - 1].classList.contains('path')) {
-        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac');
-        (actorsStateNow[gameLevelNow].pac.tile)--;
-        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac');
-      }
-      // console.log('right: ' + actorsStateNow[gameLevelNow].pac.tile)
-    }, timers.pacMoveSpeed * m)
-  }
+  pacMoveInterval = setInterval(function () {
+    if (mazeTileIndex[(actorsStateNow[gameLevelNow].pac.tile) - 1].classList.contains('path')) {
+      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac');
+      (actorsStateNow[gameLevelNow].pac.tile)--;
+      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac');
+    }
+    //  else {
+    //   clearInterval(pacMoveInterval)
+    // }
+    // console.log('right: ' + actorsStateNow[gameLevelNow].pac.tile)
+  }, timers.pacMoveSpeed)
 }
-
 function pacMoveW() {
-  for (let m = 0; m < mazeSetup[gameLevelNow].mazeWidth; m++) {
-    setTimeout(function () {
-      if (mazeTileIndex[(actorsStateNow[gameLevelNow].pac.tile) + 1].classList.contains('path')) {
-        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac');
-        (actorsStateNow[gameLevelNow].pac.tile)++;
-        mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac');
-      }
-      // console.log('left: ' + actorsStateNow[gameLevelNow].pac.tile)
-    }, timers.pacMoveSpeed * m)
-  }
+  pacMoveInterval = setInterval(function () {
+    if (mazeTileIndex[(actorsStateNow[gameLevelNow].pac.tile) + 1].classList.contains('path')) {
+      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.remove('pac');
+      (actorsStateNow[gameLevelNow].pac.tile)++;
+      mazeTileIndex[actorsStateNow[gameLevelNow].pac.tile].classList.add('pac');
+    }
+    //  else {
+    //   clearInterval(pacMoveInterval)
+    // }
+    // console.log('left: ' + actorsStateNow[gameLevelNow].pac.tile)
+  }, timers.pacMoveSpeed)
 }
-
 
 // mazeTileIndex[actorsStateNow[gameLevelNow].gh1.tile].classList.contains('pac')
 
