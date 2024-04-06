@@ -46,10 +46,10 @@ const actorsStateSetup = {
       dir: 'w',
     },
     gh1: {
-      // tile: 333,
+      tile: 333,
       // tile: 586,  // for testing only
       // tile: 409,  // near left portal
-      tile: 431,  // near right portal
+      // tile: 431,  // near right portal
       dir: 'e',
     },
     gh2: {
@@ -120,6 +120,13 @@ const mazeTileIndex = []
 let mazeTile = ''
 let randomDir = ''
 
+// count down the no. of items left in the game
+let countDotRemain
+let countPowRemain
+
+// set timer for displaying alerts on screen
+let alertTimer
+
 // set intervals for character movement across tiles
 let pacMoveInterval
 let gh1MoveInterval
@@ -127,9 +134,8 @@ let gh2MoveInterval
 let gh3MoveInterval
 let gh4MoveInterval
 
-// count down the no. of items left in the game
-let countDotRemain
-let countPowRemain
+// set interval for enemy detection
+let meetEnemyIntervalCheck
 
 //? ON PAGE LOAD
 
@@ -148,10 +154,12 @@ function startGame() {
   gameInProgress = true
   playerStateNow.playing = gameInProgress
   pacMoveNow()
+  meetEnemy()
   gh1Move()
-
-
+  endGame()
 }
+
+
 
 // initialise variables for a new game
 function resetGame() {
@@ -420,30 +428,30 @@ function gh1MoveE() {
     // first check if ghost is at the right portal tile
     if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[1]) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
-      actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[0]
+      actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[0];
+      (actorsStateNow[levelNow].gh1.tile)++;
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
-    } else
-      if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('ghotHQ'))) {
-        mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
-        (actorsStateNow[levelNow].gh1.tile)--;
-        mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
-      } else {
-        clearInterval(gh1MoveInterval)
-        gh1Move() // choose a new direction
-      }
+    } else if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('ghotHQ'))) {
+      mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
+      (actorsStateNow[levelNow].gh1.tile)--;
+      mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
+    } else {
+      clearInterval(gh1MoveInterval)
+      gh1Move() // choose a new direction
+    }
   }, timers.ghMoveSpeed)
   // console.log('gh1 E2: ' + gh1MoveInterval)
 }
+
 function gh1MoveW() {
   gh1MoveInterval = setInterval(function () {
     // console.log('gh1 W1: ' + gh1MoveInterval)
     // first check if ghost is at the left portal tile
-    // if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
-    //   mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
-    //   actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1]
-    //   mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
-    // } else
-    if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('ghotHQ'))) {
+    if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
+      mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
+      actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1];
+      mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
+    } else if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('ghotHQ'))) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
       (actorsStateNow[levelNow].gh1.tile)++;
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
@@ -465,10 +473,9 @@ function gh1MoveWPortal() {
   }
 }
 
-// pac eats dots
-
+// pac eats dots and pows
 function eatItems() {
-  console.log('1 score: ' + playerStateNow.score + ' / dots: ' + countDotRemain + ' / pows: ' + countPowRemain)
+  console.log('1 score: ' + playerStateNow.score + ' • dots: ' + countDotRemain + ' • pows: ' + countPowRemain)
   if (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('dot')) {
     mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('dot')
     playerStateNow.score += scoreSetup.dot
@@ -480,20 +487,43 @@ function eatItems() {
     scoreTextEl.innerText = playerStateNow.score
     countPowRemain -= 1
   }
-  console.log('2 score: ' + playerStateNow.score + ' / dots: ' + countDotRemain + ' / pows: ' + countPowRemain)
+  console.log('2 score: ' + playerStateNow.score + ' • dots: ' + countDotRemain + '/' + itemsSetup[levelNow].dots.length + ' • pows: ' + countPowRemain + '/' + itemsSetup[levelNow].pows.length)
+}
+
+// pac and ghosts meet
+function meetEnemy() {
+  // if (actorsStateNow[levelNow].pac.tile === actorsStateNow[levelNow].gh1.tile) {
+  meetEnemyIntervalCheck = setInterval(function () {
+    if (!mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) {
+      console.log('no ghost')
+    } else {
+      console.log('gotcha')
+      clearInterval(meetEnemyIntervalCheck)
+    }
+  }, timers.ghMoveSpeed)
 }
 
 function endGame() {
-  // if ((countDotRemain && countPowRemain) === 0) {
-  //   console.log('pac win at ' + levelNow)
-  //   playerStateNow.level += 1
-  //   levelTextEl.innerText = playerStateNow.level
-  //   // levelNow = 'level'.concat(playerStateNow.level)
-  //   console.log('playerStateNow is ' + playerStateNow.level)
-  //   return
-  // }
+  if ((countDotRemain && countPowRemain) === 0) {
+    clearInterval(meetEnemyIntervalCheck)
+    clearTimeout(alertTimer)
+    // gameInProgress = false
+    // playerStateNow.playing = false
+    alertTimer = setTimeout(() => {
+      alert(`You scored ${playerStateNow.score} points`)
+    }, timers.endGamePause)
+    playerStateNow.level += 1
+    levelTextEl.innerText = playerStateNow.level
+  } else if (playerStateSetup.life === 0) {
+    clearInterval(meetEnemyIntervalCheck)
+    clearTimeout(alertTimer)
+    gameInProgress = false
+    playerStateNow.playing = false
+    alertTimer = setTimeout(() => {
+      alert(`Game over! You scored ${playerStateNow.score} points`)
+    }, timers.endGamePause)
+  }
 }
-
 
 //? EVENTS
 
