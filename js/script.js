@@ -29,6 +29,7 @@ const mazeSetup = {
     mazePortals: {
       portal1: [406, 434],
     },
+    textAlertTile: 507,
   },
 }
 
@@ -42,7 +43,7 @@ const actorsStateSetup = {
   level1: {
     pac: {
       tile: 681,
-      // tile: 602,  / /for testing only
+      // tile: 602,  // for testing only
       dir: 'w',
     },
     gh1: {
@@ -57,11 +58,11 @@ const actorsStateSetup = {
       dir: 'n',
     },
     gh3: {
-      tile: (418 + 1),
+      tile: (418 + 1), //! moved over until an exit function is defined
       dir: 'e',
     },
     gh4: {
-      tile: (422 - 1),
+      tile: (422 - 1), //! moved over until an exit function is defined
       dir: 'w',
     },
   },
@@ -148,15 +149,18 @@ function onLoad() {
 
 function startGame() {
   showMaze()
+  // mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerText = mazeAlertText.start
+  mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
   showPlayerState()
   countDotRemain = itemsSetup[levelNow].dots.length
   countPowRemain = itemsSetup[levelNow].pows.length
   gameInProgress = true
   playerStateNow.playing = gameInProgress
   pacMoveNow()
-  meetEnemy()
+  // meetEnemy()
   gh1Move()
-  endGame()
+  // winGameLevel()
+  // endGame()
 }
 
 
@@ -275,34 +279,12 @@ function pacMoveCtrl(e) {
   }
 }
 
-// check if pacman is at portal tile (406, 434)
-// mazeSetup[levelNow].mazePortals.portal1[0]
-// mazeSetup[levelNow].mazePortals.portal1[1]
-// if (mazeTileIndex[mazeSetup[levelNow].mazePortals.portal1[1]].classList.contains('pac')) {
-//   mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac');
-//   (actorsStateNow[levelNow].pac.tile) = (mazeSetup[levelNow].mazePortals.portal1[0]);
-//   mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac');
-// } else {
-
-// if (actorsStateNow[levelNow].pac.tile === 406) {
-// actorsStateNow[levelNow].pac.tile = 434
-// } else
-
-// if (mazeTileIndex[406].classList.contains('pac')) {
-//   mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac');
-//   (actorsStateNow[levelNow].pac.tile) = (mazeSetup[levelNow].mazePortals.portal1[0]);
-//   mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac');
-// } else {
-
-
 // pac move directions
 function pacMoveN() {
   pacMoveInterval = setInterval(function () {
     // console.log('pac up 1: ' + pacMoveInterval)
     if (mazeTileIndex[(actorsStateNow[levelNow].pac.tile) - (mazeSetup[levelNow].mazeWidth)].classList.contains('path')) {
-      eatItems(
-        endGame()
-      )
+      eatItems()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac')
       actorsStateNow[levelNow].pac.tile -= mazeSetup[levelNow].mazeWidth
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac')
@@ -328,6 +310,7 @@ function pacMoveS() {
 }
 function pacMoveE() {
   pacMoveInterval = setInterval(function () {
+    // check if pacman is at portal tile
     if (actorsStateNow[levelNow].pac.tile === mazeSetup[levelNow].mazePortals.portal1[1]) {
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac');
       actorsStateNow[levelNow].pac.tile = mazeSetup[levelNow].mazePortals.portal1[0]
@@ -345,6 +328,7 @@ function pacMoveE() {
 }
 function pacMoveW() {
   pacMoveInterval = setInterval(function () {
+    // check if pacman is at portal tile
     if (actorsStateNow[levelNow].pac.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac');
       actorsStateNow[levelNow].pac.tile = mazeSetup[levelNow].mazePortals.portal1[1]
@@ -465,7 +449,7 @@ function gh1MoveW() {
 function gh1MoveWPortal() {
   if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
     mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
-    actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1]
+    actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1];
     mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
     gh1MoveW()
   } else {
@@ -475,7 +459,7 @@ function gh1MoveWPortal() {
 
 // pac eats dots and pows
 function eatItems() {
-  console.log('1 score: ' + playerStateNow.score + ' • dots: ' + countDotRemain + ' • pows: ' + countPowRemain)
+  // console.log('1 score: ' + playerStateNow.score + ' • dots: ' + countDotRemain + ' • pows: ' + countPowRemain)
   if (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('dot')) {
     mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('dot')
     playerStateNow.score += scoreSetup.dot
@@ -494,16 +478,33 @@ function eatItems() {
 function meetEnemy() {
   // if (actorsStateNow[levelNow].pac.tile === actorsStateNow[levelNow].gh1.tile) {
   meetEnemyIntervalCheck = setInterval(function () {
-    if (!mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) {
-      console.log('no ghost')
-    } else {
-      console.log('gotcha')
-      clearInterval(meetEnemyIntervalCheck)
+    if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
+      switch (ghStateNow) {
+        case 'hunt':
+          // clearInterval(meetEnemyIntervalCheck)
+          playerStateNow.life -= 1
+          lifeTextEl.innerText = playerStateNow.life
+          startPositions()
+
+          console.log(ghStateNow)
+          break
+        case 'flee1': console.log(ghStateNow)
+          break
+        case 'flee2': console.log(ghStateNow)
+          break
+        case 'return': console.log(ghStateNow)
+          break
+      }
+      // console.log('_______GOTCHA_______')
     }
+
+    // clearInterval(meetEnemyIntervalCheck)
+
   }, timers.ghMoveSpeed)
 }
 
-function endGame() {
+// clear a game board
+function winGameLevel() {
   if ((countDotRemain && countPowRemain) === 0) {
     clearInterval(meetEnemyIntervalCheck)
     clearTimeout(alertTimer)
@@ -514,7 +515,12 @@ function endGame() {
     }, timers.endGamePause)
     playerStateNow.level += 1
     levelTextEl.innerText = playerStateNow.level
-  } else if (playerStateSetup.life === 0) {
+  }
+}
+
+// game over
+function endGame() {
+  if (playerStateSetup.life === 0) {
     clearInterval(meetEnemyIntervalCheck)
     clearTimeout(alertTimer)
     gameInProgress = false
