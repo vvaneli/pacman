@@ -1,5 +1,8 @@
 //? ELEMENTS
 
+// FOR TESTING ONLY
+const testBtnEl = document.querySelector('.test')
+
 // Start Game
 const startBtnEl = document.querySelector('#start')
 const imgCoverHeadEl = document.querySelector('#imgCoverHeadline')
@@ -15,7 +18,7 @@ const levelIconsEl = document.querySelector('#levelIcons')
 
 //? VARIABLES
 
-// 1 ––– SETUP
+// –––––– 1: SETUP –––––– //
 
 const mazeSetup = {
   mazeTileWidthPx: '16px',
@@ -75,9 +78,6 @@ const itemsSetup = {
   },
 }
 
-// ghost status options
-const ghStates = ['hunt', 'flee1', 'flee2', 'return']
-
 // score allocation
 const scoreSetup = {
   dot: 10,
@@ -91,20 +91,40 @@ const playerStateSetup = {
   score: 0,
   life: 3,
   level: 1,
+  levelDecade: 1980,
   levelIcons: '',
 }
 
-// timer setups in milliseconds
+// timing setups in milliseconds
 const timers = {
   startGamePause: 3000,
   endGamePause: 3000,
   pacMoveSpeed: 100,
-  ghMoveSpeed: 100,
+  ghMoveSpeed: 120, // also used for gameStateIntervalCheck
   ghFlee1Duration: 4000,
   ghFlee2Duration: 3000,
 }
 
-// 2 ––– PLAY
+// –––––– 2: TIME –––––– //
+
+// master time keepers for a game
+let timekeeper
+let gameStateIntervalCheck
+
+// for displaying alerts on screen
+let alertTimer
+
+// for character movement across tiles
+let pacMoveInterval
+let gh1MoveInterval
+let gh2MoveInterval
+let gh3MoveInterval
+let gh4MoveInterval
+
+// detect encounters
+let meetEnemyIntervalCheck
+
+// –––––– 3: PLAY –––––– //
 
 // at game start, copy from var playerStateSetup
 let playerStateNow = {}
@@ -114,65 +134,90 @@ let actorsStateNow = {}
 let gameInProgress = false
 let levelNow
 
+// ghost status options:
+// const ghStates = ['hunt', 'flee1', 'flee2', 'return']
 let ghStateNow = 'hunt'
 
+// for game grid tile divs
 const mazeTileIndex = []
-
 let mazeTile = ''
+
+// generate random directions for ghosts
 let randomDir = ''
 
 // count down the no. of items left in the game
 let countDotRemain
 let countPowRemain
 
-// set timer for displaying alerts on screen
-let alertTimer
-
-// set intervals for character movement across tiles
-let pacMoveInterval
-let gh1MoveInterval
-let gh2MoveInterval
-let gh3MoveInterval
-let gh4MoveInterval
-
-// set interval for enemy detection
-let meetEnemyIntervalCheck
-
 //? ON PAGE LOAD
 
 function onLoad() {
-  resetGame()
+  newGame()
   drawMaze()
 }
 
 //? EXECUTION
 
+// function mainTimekeeper() {
+
+// }
+
 function startGame() {
   showMaze()
-  // mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerText = mazeAlertText.start
-  mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
   showPlayerState()
-  countDotRemain = itemsSetup[levelNow].dots.length
-  countPowRemain = itemsSetup[levelNow].pows.length
-  gameInProgress = true
-  playerStateNow.playing = gameInProgress
-  pacMoveNow()
-  // meetEnemy()
-  gh1Move()
-  // winGameLevel()
-  // endGame()
+  mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
+  timekeeper = setTimeout(() => {
+    console.log('Start timekeeper: ' + timekeeper)
+    mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">Go!<h3>'
+    gameInProgress = true
+    playerStateNow.playing = gameInProgress
+    gameOn()
+    // console.log('Game in progress? ' + gameInProgress)
+  }, timers.startGamePause)
+  gameStateIntervalCheck = setInterval(() => {
+    console.log('Start gameStateIntervalCheck: ' + gameStateIntervalCheck)
+    // console.log('Game State Interval Check: Game in progress? ' + gameInProgress)
+    winGameLevel()
+    // console.log('Game in progress FALSE? ' + gameInProgress)
+  }, timers.ghMoveSpeed)
 }
 
+// reset timers used in gameplay
+function clearGameTimers() {
+  console.log('clearGameTimers -- timekeeper: ' + timekeeper + '• gameStateIntervalCheck: ' + gameStateIntervalCheck)
+  clearInterval(gameStateIntervalCheck)
+  clearTimeout(timekeeper)
+  clearInterval(meetEnemyIntervalCheck)
+  clearInterval(gh1MoveInterval)
+  clearInterval(gh2MoveInterval)
+  clearInterval(gh3MoveInterval)
+  clearInterval(gh4MoveInterval)
+  clearInterval(pacMoveInterval)
+}
 
+// reset all timers
+function clearAllTimers() {
+  clearGameTimers()
+  clearTimeout(alertTimer)
+}
 
 // initialise variables for a new game
-function resetGame() {
-  // removeAllActors()
+function newGame() {
   actorsStateNow = {}
   playerStateNow = {}
   actorsStateNow = Object.assign({}, actorsStateSetup)
   playerStateNow = Object.assign({}, playerStateSetup)
+  newGameLevel()
+}
+
+// initialise variables for level up
+function newGameLevel() {
+  clearAllTimers()
   levelNow = 'level'.concat(playerStateNow.level)
+  countDotRemain = []
+  countPowRemain = []
+  countDotRemain = itemsSetup[levelNow].dots.length
+  countPowRemain = itemsSetup[levelNow].pows.length
 }
 
 // show current score and game level
@@ -180,7 +225,7 @@ function showPlayerState() {
   scoreTextEl.innerText = playerStateNow.score
   lifeTextEl.innerText = playerStateNow.life
   levelTextEl.classList.add('levelNow')
-  levelTextEl.innerText = playerStateNow.level
+  levelTextEl.innerText = playerStateNow.levelDecade
   levelIconsEl.innerText = playerStateNow.levelIcons
 }
 
@@ -243,6 +288,15 @@ function startPositions() {
   mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac')
 }
 
+// remove all characters in the maze
+function removeAllActors() {
+  mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1')
+  mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.remove('gh2')
+  mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.remove('gh3')
+  mazeTileIndex[actorsStateNow[levelNow].gh4.tile].classList.remove('gh4')
+  mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac')
+}
+
 // hide start button and cover panel
 function showMaze() {
   startBtnEl.setAttribute('disabled', true)
@@ -251,27 +305,28 @@ function showMaze() {
   gameCoverEl.style.display = 'none'
 }
 
-// clear tiles of all characters
-// function removeAllActors() {
-//   forEach
-//   mazeTile.classList.remove('pac')
-// }
+// only let characters move if game is in progress
+function gameOn() {
+  if (gameInProgress === true) {
+    pacMoveNow()
+    gh1Move()
+    // gh2Move()
+    // gh3Move()
+    // gh4Move()
+  }
+}
 
 // move pacman
 function pacMoveCtrl(e) {
   // console.log(e)
   clearInterval(pacMoveInterval)
   if (e.key === 'ArrowUp' || e.key === 'w' || e.key === '8') {
-    // clearInterval(pacMoveInterval)
     pacMoveN()
   } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === '2') {
-    // clearInterval(pacMoveInterval)
     pacMoveS()
   } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === '6') {
-    // clearInterval(pacMoveInterval)
     pacMoveE()
   } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === '4') {
-    // clearInterval(pacMoveInterval)
     pacMoveW()
   } else {
     // put pacman back in same position if an unassigned key was pressed
@@ -474,6 +529,15 @@ function eatItems() {
   console.log('2 score: ' + playerStateNow.score + ' • dots: ' + countDotRemain + '/' + itemsSetup[levelNow].dots.length + ' • pows: ' + countPowRemain + '/' + itemsSetup[levelNow].pows.length)
 }
 
+// function mainTimekeeper() {
+//   timekeeper = setInterval(
+//   eatEnemy(),
+//   timer.ghMoveSpeed)
+// function meetEnemy()
+// winGameLevel()
+// endGame()
+// }
+
 // pac and ghosts meet
 function meetEnemy() {
   // if (actorsStateNow[levelNow].pac.tile === actorsStateNow[levelNow].gh1.tile) {
@@ -505,36 +569,77 @@ function meetEnemy() {
 
 // clear a game board
 function winGameLevel() {
-  if ((countDotRemain && countPowRemain) === 0) {
-    clearInterval(meetEnemyIntervalCheck)
-    clearTimeout(alertTimer)
-    // gameInProgress = false
-    // playerStateNow.playing = false
-    alertTimer = setTimeout(() => {
-      alert(`You scored ${playerStateNow.score} points`)
-    }, timers.endGamePause)
-    playerStateNow.level += 1
-    levelTextEl.innerText = playerStateNow.level
+  if (countDotRemain + countPowRemain === 0) {
+    clearGameTimers() // clear timers
+    endGame()
+    console.log('You have won')
+    // clearInterval(meetEnemyIntervalCheck)
+    // startNextLevel()
   }
+}
+
+// lost all lives
+function lostGameLevel() {
+  if (playerStateSetup.life === 0) {
+    clearGameTimers()
+    console.log('You have lost all lives')
+    endGame()
+  }
+}
+
+// level up
+function startNextLevel() {
+  console.log('Level Up!')
+  playerStateNow.level += 0  // for single level game
+  playerStateNow.levelDecade += 10
+  newGameLevel()
+  levelTextEl.innerText = playerStateNow.levelDecade
+  endGame() // for single level game
 }
 
 // game over
 function endGame() {
-  if (playerStateSetup.life === 0) {
-    clearInterval(meetEnemyIntervalCheck)
-    clearTimeout(alertTimer)
-    gameInProgress = false
-    playerStateNow.playing = false
-    alertTimer = setTimeout(() => {
-      alert(`Game over! You scored ${playerStateNow.score} points`)
-    }, timers.endGamePause)
-  }
+  gameInProgress = false
+  playerStateNow.playing = false
+  alertTimer = setTimeout(() => {
+    mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.end + '</h3>'
+    // mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">Score: ' + playerStateNow.score + '</h3>'
+  }, timers.endGamePause)
 }
+
 
 //? EVENTS
 
 startBtnEl.addEventListener('click', startGame)
 function pacMoveNow() {
   document.addEventListener('keydown', pacMoveCtrl)
+  mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = ''
 }
 window.addEventListener('load', onLoad)
+
+
+
+// For developemnt only:
+testBtnEl.addEventListener('click', test)
+
+function test() {
+  // console.log('alert timer on press ' + gameStateIntervalCheck)
+  console.log(`TIMER CHECKS ` + `
+  timekeeper: ` + timekeeper + `
+  gameStateIntervalCheck: ` + gameStateIntervalCheck + `
+  alertTimer: ` + alertTimer + `
+  pacMoveInterval: ` + pacMoveInterval + `
+  gh1MoveInterval: ` + gh1MoveInterval + `
+  gh2MoveInterval: ` + gh2MoveInterval + `
+  gh3MoveInterval: ` + gh3MoveInterval + `
+  gh4MoveInterval: ` + gh4MoveInterval + `
+  meetEnemyIntervalCheck: ` + meetEnemyIntervalCheck + `
+  
+ STATE OF PLAY ` + `
+ gameInProgress: ` + gameInProgress
+    // +  `
+    //   gameStateIntervalCheck: ` + gameStateIntervalCheck + `
+    //   alertTimer: ` + alertTimer
+  )
+
+}

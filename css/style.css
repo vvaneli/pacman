@@ -214,6 +214,10 @@ background: url(/img/dot1_16px.svg);
   content: 'Level: ';
 }
 
+.levelNow::after {
+  content: 's';
+}
+
 .maze-alert {
   color: yellow;
   scale: 220%;
