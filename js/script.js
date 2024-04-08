@@ -166,12 +166,18 @@ function onLoad() {
 
 //? EXECUTION
 
+// start a new game
 function startGame() {
   showMaze()
   showPlayerState()
+  gameOn()
+}
+
+// start new game, or resume a game in progress
+function gameOn() {
   mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
   timekeeper = setTimeout(() => {
-    // console.log('Start timekeeper: ' + timekeeper)
+    // remove alert text
     mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = ''
     gameInProgress = true
     playerStateNow.playing = gameInProgress
@@ -179,40 +185,25 @@ function startGame() {
       pacMoveNow()
       ghMoveNow()
     }
-    // console.log('Game in progress? ' + gameInProgress)
   }, timers.startGamePause)
   gameStateIntervalCheck = setInterval(() => {
     console.log('Start gameStateIntervalCheck: ' + gameStateIntervalCheck)
     // console.log('Game State Interval Check: Game in progress? ' + gameInProgress)
     if (gameInProgress === true) {
       meetEnemy()
-      lostGameLevel()
-      winGameLevel()
+      // lostGameLevel()
+      // winGameLevel()
     }
     // console.log('Game in progress FALSE? ' + gameInProgress)
   }, timers.ghMoveSpeed)
 }
 
-// restart the game
+// play another game (after finishing a previous one)
 function playAgain() {
   clearAllTimers()
   newGame()
   drawMaze()
   startGame()
-}
-
-// reset timers used in gameplay
-function clearGameTimers() {
-  console.log('clearGameTimers -- timekeeper: ' + timekeeper + ' • gameStateIntervalCheck: ' + gameStateIntervalCheck)
-  clearInterval(gameStateIntervalCheck)
-  clearTimeout(timekeeper)
-}
-
-// reset all timers
-function clearAllTimers() {
-  clearActorTimers()
-  clearGameTimers()
-  clearTimeout(alertTimer)
 }
 
 // reset actor timers
@@ -222,6 +213,21 @@ function clearActorTimers() {
   clearInterval(gh3MoveInterval)
   clearInterval(gh4MoveInterval)
   clearInterval(pacMoveInterval)
+  clearTimeout(pacLossLifeTimer)
+  clearInterval(pacNextLifeTimer)
+}
+
+// reset playing timers
+function clearGameTimers() {
+  clearInterval(gameStateIntervalCheck)
+  clearTimeout(timekeeper)
+}
+
+// reset all timers
+function clearAllTimers() {
+  clearActorTimers()
+  clearGameTimers()
+  clearTimeout(alertTimer)
 }
 
 // initialise variables for a new game (from level 1)
@@ -570,27 +576,21 @@ function meetEnemy() {
         // show sprite for pacman defeated
         mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac') // remove all variations of pac here?
         mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac-end')
-        pacLossLifeTimer = setTimeout(function () {
-          // mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac-end')
-          removeAllActors()
-          // put characters back in their start tile index
-          actorsStateReset()
-          startPositions()
-          pacNextLifeTimer = setTimeout(function () {
-            mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
-            gameInProgress = true
-            pacMoveNow()
-          }, timers.pacNextLifePause)
-        }, timers.pacLossLifePause)
-        // timers.pacLossLifePause
-
-        // place characters at their start positions (after life lost)
-
-
-  // }
-
-
-        console.log(ghStateNow)
+        if (playerStateNow.life <= 0) {
+          lostGameLevel()
+        } else {
+          pacLossLifeTimer = setTimeout(function () {
+            // mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac-end')
+            removeAllActors()
+            // put characters back in their start tile index
+            actorsStateReset()
+            startPositions()
+            pacNextLifeTimer = setTimeout(function () {
+              mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
+              gameOn()
+            }, timers.pacNextLifePause)
+          }, timers.pacLossLifePause)
+        }
         break
       case 'flee1': console.log(ghStateNow)
         break
@@ -604,11 +604,11 @@ function meetEnemy() {
 
 // lost all lives
 function lostGameLevel() {
-  if (playerStateNow.life <= 0) {
-    clearGameTimers()
-    endGame()
-    console.log('You LOSE')
-  }
+  // if (playerStateNow.life <= 0) {
+  clearGameTimers()
+  endGame()
+  console.log('You LOSE')
+  // }
 }
 
 // clear a game board
