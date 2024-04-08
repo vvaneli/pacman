@@ -98,11 +98,11 @@ h1 {
   /* background-color: rgba(244, 76, 24, 0.7); */
 }
 
-.pac,
+/* .pac,
 .gh1,
 .gh2,
 .gh3,
-.gh4,
+.gh4, */
 .dot,
 .pow {
   background: url(/img/pacman_sprites_5w4h_16px_@2x.gif);
@@ -117,7 +117,14 @@ h1 {
 .pac-end,
 .gh1-ns,
 .gh1-ew,
+.gh2-ns,
+.gh2-ew,
+.gh3-ns,
+.gh3-ew,
+.gh4-ns,
+.gh4-ew,
 .gh-flee1
+.gh-flee2
  {
   background: url(/img/pacman_sprites_5w4h_16px_@2x.gif);
   background-size: 500%;
@@ -130,7 +137,7 @@ h1 {
 .pow {
   background-position: calc(var(--mazeTileWidth) * -4) calc(var(--mazeTileWidth) * -3);
   }
-.gh1 {
+/* .gh1 {
   background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -1);
 }
 .gh2 {
@@ -144,7 +151,7 @@ h1 {
 }
 .pac {
   background-position: 0 calc(var(--mazeTileWidth) * -3);
-}
+} */
 
 /* PACMAN SPRITES */
 .pac-ready {
@@ -175,26 +182,26 @@ h1 {
 }
 
 /* GH2 SPRITES */
-.gh2-NS {
+.gh2-ns {
   background-position: calc(var(--mazeTileWidth) * -2) 0;
 }
-.gh2-EW {
+.gh2-ew {
   background-position: calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -1);
 }
 
 /* GH3 SPRITES */
-.gh3-NS {
+.gh3-ns {
   background-position: calc(var(--mazeTileWidth) * -3) 0;
 }
-.gh3-EW {
+.gh3-ew {
   background-position: calc(var(--mazeTileWidth) * -3) calc(var(--mazeTileWidth) * -1);
 }
 
 /* GH4 SPRITES */
-.gh4-NS {
+.gh4-ns {
   background-position: calc(var(--mazeTileWidth) * -4) 0;
 }
-.gh4-EW {
+.gh4-ew {
   background-position: calc(var(--mazeTileWidth) * -4) calc(var(--mazeTileWidth) * -1);
 }
 
@@ -205,10 +212,10 @@ h1 {
 .gh-flee2 {
   background-position: calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -3);
 }
-.gh-return-NS {
+.gh-return-ns {
   background-position: calc(var(--mazeTileWidth) * -3) calc(var(--mazeTileWidth) * -2);
 }
-.gh-return-EW {
+.gh-return-ew {
   background-position: calc(var(--mazeTileWidth) * -3) calc(var(--mazeTileWidth) * -3);
 }
 

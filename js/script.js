@@ -47,8 +47,8 @@ const mazeAlertText = {
 const actorsStateSetup = {
   level1: {
     pac: {
-      // tile: 681,
-      tile: 602,  // for testing only
+      tile: 681,
+      // tile: 602,  // for testing only
       dir: 'w',
     },
     gh1: {
@@ -133,7 +133,7 @@ let pacNextLifeTimer
 
 let pacSprite = 'pac-w'
 let gh1Sprite = 'gh1-ew'
-let gh2Sprite = 'gh2-ns'
+let gh2Sprite = 'gh2-ew'
 let gh3Sprite = 'gh3-ew'
 let gh4Sprite = 'gh4-ew'
 
