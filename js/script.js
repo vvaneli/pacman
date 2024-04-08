@@ -212,12 +212,17 @@ function clearAllTimers() {
 
 // initialise variables for a new game
 function newGame() {
+  clearAllTimers()
   actorsStateNow = {}
   playerStateNow = {}
   actorsStateNow = Object.assign({}, actorsStateSetup)
   actorsStateNow = JSON.parse(JSON.stringify(actorsStateSetup))
   playerStateNow = Object.assign({}, playerStateSetup)
   levelNow = 'level'.concat(playerStateNow.level)
+  countDotRemain = []
+  countPowRemain = []
+  countDotRemain = itemsSetup[levelNow].dots.length
+  countPowRemain = itemsSetup[levelNow].pows.length
 }
 
 // initialise variables for level up
@@ -541,7 +546,8 @@ function eatItems() {
 
 // pac and ghosts meet
 function meetEnemy() {
-  if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
+  if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.contains('pac'))) {
+  // if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
     switch (ghStateNow) {
       case 'hunt':
         playerStateNow.life -= 1
@@ -644,4 +650,6 @@ function test() {
   console.log(`
   actorsStateNow: `)
   console.log(actorsStateNow)
+  console.log('countDotRemain: ' + typeof countDotRemain)
+  console.log('countPowRemain: ' + typeof countPowRemain)
 }
