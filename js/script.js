@@ -413,7 +413,7 @@ function pacMoveE() {
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove(pacSprite);
       actorsStateNow[levelNow].pac.tile = mazeSetup[levelNow].mazePortals.portal1[0]
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add(pacSprite);
-    } else if (mazeTileIndex[(actorsStateNow[levelNow].pac.tile) + 1].classList.contains('path')) {    
+    } else if (mazeTileIndex[(actorsStateNow[levelNow].pac.tile) + 1].classList.contains('path')) {
       eatItems()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove(pacSprite);
       (actorsStateNow[levelNow].pac.tile)++;
@@ -425,7 +425,7 @@ function pacMoveE() {
   }, timers.pacMoveSpeed)
 }
 function pacMoveW() {
-  pacMoveInterval = setInterval(function () { 
+  pacMoveInterval = setInterval(function () {
     // check if pacman is at portal tile
     if (actorsStateNow[levelNow].pac.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove(pacSprite);
@@ -457,7 +457,7 @@ function getRandomDir() {
   }
 }
 
-// exit ghost HG
+// exit ghost HQ
 // (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - (mazeSetup[levelNow].mazeWidth)].classList.contains('ghostHQ'))
 
 // move all ghosts
@@ -483,11 +483,39 @@ function gh1Move() {
       break
   }
 }
+function gh1SpriteOptions() {
+  switch (ghStateNow) {
+    case 'hunt':
+      if (actorsStateNow[levelNow].gh1.dir === 'n') {
+        gh1Sprite = 'gh1-ns'
+      } else if (actorsStateNow[levelNow].gh1.dir === 's') {
+        gh1Sprite = 'gh1-ns'
+      } else {
+        gh1Sprite = 'gh1-ew'
+      }
+      break
+    case 'flee1': gh1Sprite = 'gh-flee1'
+      break
+    case 'flee2': gh1Sprite = 'gh-flee2'
+      break
+    case 'return':
+      if (actorsStateNow[levelNow].gh1.dir === 'n') {
+        gh1Sprite = 'gh-return-ns'
+      } else if (actorsStateNow[levelNow].gh1.dir === 's') {
+        gh1Sprite = 'gh-return-ns'
+      } else {
+        gh1Sprite = 'gh-return-ew'
+      }
+      break
+  }
+}
 function gh1MoveN() {
   gh1MoveInterval = setInterval(function () {
     if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - (mazeSetup[levelNow].mazeWidth)].classList.contains('path')) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite)
       actorsStateNow[levelNow].gh1.tile -= mazeSetup[levelNow].mazeWidth
+      gh1SpriteOptions()
+      // gh1Sprite = 'gh1-ns'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite)
       // if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile)].classList.contains('juntion')) { // at a junction, choose a new direction at random
       //   clearInterval(gh1MoveInterval)
@@ -504,6 +532,8 @@ function gh1MoveS() {
     if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + (mazeSetup[levelNow].mazeWidth)].classList.contains('path')) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite)
       actorsStateNow[levelNow].gh1.tile += mazeSetup[levelNow].mazeWidth
+      gh1SpriteOptions()
+      // gh1Sprite = 'gh1-ns'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite)
     } else {
       clearInterval(gh1MoveInterval)
@@ -517,12 +547,16 @@ function gh1MoveW() {
     if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite);
       actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1];
+      gh1SpriteOptions()
+      // gh1Sprite = 'gh1-ew'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite);
       clearInterval(gh1MoveInterval)
       gh1MoveW()
     } else if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('path')) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite);
       (actorsStateNow[levelNow].gh1.tile)--;
+      gh1SpriteOptions()
+      // gh1Sprite = 'gh1-ew'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite);
     } else {
       clearInterval(gh1MoveInterval)
@@ -536,12 +570,16 @@ function gh1MoveE() {
     if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[1]) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite);
       actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[0];
+      gh1SpriteOptions()
+      // gh1Sprite = 'gh1-ew'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite);
       clearInterval(gh1MoveInterval)
       gh1MoveE()
     } else if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('path')) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite);
       (actorsStateNow[levelNow].gh1.tile)++;
+      gh1SpriteOptions()
+      // gh1Sprite = 'gh1-ew'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite);
     } else {
       clearInterval(gh1MoveInterval)
@@ -560,38 +598,12 @@ function eatItems() {
     countDotRemain -= 1
   } else if (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('pow')) {
     mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pow')
-
-    console.log('levelNow ' + levelNow)
-    ghFlee()
+    ghStateNow = 'flee1'
     playerStateNow.score += scoreSetup.pow
     scoreTextEl.innerText = playerStateNow.score
     countPowRemain -= 1
   }
   console.log('2 score: ' + playerStateNow.score + ' • dots: ' + countDotRemain + '/' + itemsSetup[levelNow].dots.length + ' • pows: ' + countPowRemain + '/' + itemsSetup[levelNow].pows.length)
-}
-
-function ghFlee() {
-  ghStateNow = 'flee1'
-  console.log(ghStateNow)
-  gh1Sprite = 'gh-flee1'
-  gh2Sprite = 'gh-flee1'
-  gh3Sprite = 'gh-flee1'
-  gh4Sprite = 'gh-flee1'
-  // gameInProgress = false
-  // gh1Sprite.style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
-  // mazeTileIndex[actorsStateNow[levelNow].gh1.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
-  // mazeTileIndex[actorsStateNow[levelNow].gh2.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
-  // mazeTileIndex[actorsStateNow[levelNow].gh3.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
-  // mazeTileIndex[actorsStateNow[levelNow].gh4.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
-//   const ghStateChangePause = setTimeout(function () {
-// ghMoveNow()
-//   }, 1000)
-  // mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.replace('gh1', 'gh-flee1')
-  // mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.replace('gh2', 'gh-flee1')
-  // mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.replace('gh3', 'gh-flee1')
-  // mazeTileIndex[actorsStateNow[levelNow].gh4.tile].classList.replace('gh4', 'gh-flee1')
-  // gameInProgress = true
-  console.log('levelNow ' + levelNow)
 }
 
 // pac and ghosts meet
@@ -684,6 +696,7 @@ function endGame() {
 
 //? EVENTS
 
+window.addEventListener('load', onLoad)
 startBtnEl.addEventListener('click', startGame)
 replayBtnEl.addEventListener('click', playAgain)
 function pacMoveNow() {
@@ -692,7 +705,7 @@ function pacMoveNow() {
 function pacMoveNot() {
   document.removeEventListener('keydown', pacMoveCtrl)
 }
-window.addEventListener('load', onLoad)
+
 
 
 
