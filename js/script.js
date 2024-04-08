@@ -210,24 +210,19 @@ function clearAllTimers() {
   clearTimeout(alertTimer)
 }
 
-// initialise variables for a new game
+// initialise variables for a new game (from level 1)
 function newGame() {
   clearAllTimers()
-  actorsStateNow = {}
   playerStateNow = {}
-  actorsStateNow = Object.assign({}, actorsStateSetup)
-  actorsStateNow = JSON.parse(JSON.stringify(actorsStateSetup))
   playerStateNow = Object.assign({}, playerStateSetup)
-  levelNow = 'level'.concat(playerStateNow.level)
-  countDotRemain = []
-  countPowRemain = []
-  countDotRemain = itemsSetup[levelNow].dots.length
-  countPowRemain = itemsSetup[levelNow].pows.length
+  setLevel()
 }
 
 // initialise variables for level up
-function levelUp() {
-  clearAllTimers()
+function setLevel() {
+  actorsStateNow = {}
+  actorsStateNow = Object.assign({}, actorsStateSetup)
+  actorsStateNow = JSON.parse(JSON.stringify(actorsStateSetup))
   levelNow = 'level'.concat(playerStateNow.level)
   countDotRemain = []
   countPowRemain = []
@@ -586,10 +581,10 @@ function winGameLevel() {
 // level up
 function startNextLevel() {
   console.log('Level Up!')
-  playerStateNow.level += 0  // for single level game
+  playerStateNow.level += 0  // zero for single level game
   playerStateNow.levelDecade += 10
-  levelUp()
-  levelTextEl.innerText = playerStateNow.levelDecade
+  setLevel()
+  // levelTextEl.innerText = playerStateNow.levelDecade
   endGame() // for single level game
 }
 
