@@ -136,15 +136,73 @@ h1 {
   background-position: calc(var(--mazeTileWidth) * -4) calc(var(--mazeTileWidth) * -1);
 }
 .pac {
-  background-position: 0 calc(var(--mazeTileWidth) * -2);
-  /* for testing: */
-  /* background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -3); */
-  /* Starting position (circlular pac): */
-  /* background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -2); */
+  background-position: 0 calc(var(--mazeTileWidth) * -3);
 }
 
+/* PACMAN STATES */
+.pac-ready {
+  background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -2);
+}
 .pac-end {
-    background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -3);
+  background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -3);
+}
+.pac-N {
+  background-position: 0 0;
+}
+.pac-S {
+  background-position: 0 calc(var(--mazeTileWidth) * -1);
+}
+.pac-E {
+  background-position: 0 calc(var(--mazeTileWidth) * -2);
+}
+.pac-W {
+  background-position: 0 calc(var(--mazeTileWidth) * -3);
+}
+
+/* GH4 STATES */
+.gh4-NS {
+  background-position: calc(var(--mazeTileWidth) * -4) 0;
+}
+.gh4-EW {
+  background-position: calc(var(--mazeTileWidth) * -4) calc(var(--mazeTileWidth) * -1);
+}
+
+/* GH3 STATES */
+.gh3-NS {
+  background-position: calc(var(--mazeTileWidth) * -3) 0;
+}
+.gh3-EW {
+  background-position: calc(var(--mazeTileWidth) * -3) calc(var(--mazeTileWidth) * -1);
+}
+
+/* GH2 STATES */
+.gh2-NS {
+  background-position: calc(var(--mazeTileWidth) * -2) 0;
+}
+.gh2-EW {
+  background-position: calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -1);
+}
+
+/* GH1 STATES */
+.gh1-NS {
+  background-position: calc(var(--mazeTileWidth) * -1) 0;
+}
+.gh1-EW {
+  background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -1);
+}
+
+/* COMMON GHOST STATES */
+.gh-flee1 {
+  background-position: calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2);
+}
+.gh-flee2 {
+  background-position: calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -3);
+}
+.gh-return-NS {
+  background-position: calc(var(--mazeTileWidth) * -3) calc(var(--mazeTileWidth) * -2);
+}
+.gh-return-EW {
+  background-position: calc(var(--mazeTileWidth) * -3) calc(var(--mazeTileWidth) * -3);
 }
 
 /* GAME AREA */
@@ -220,7 +278,7 @@ h1 {
 
 /* SIDE PANELS */
 
-details>summary {
+details > summary {
   background-color: white;
   cursor: pointer;
   padding: 1em;
@@ -230,7 +288,7 @@ details>summary {
   /* transition: 0.4s; */
 }
 
-details>div {
+details > div {
   padding: 1em;
   text-align: left;
 }
