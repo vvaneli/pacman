@@ -105,9 +105,11 @@ const timers = {
   ghMoveSpeed: 120, // also used for gameStateIntervalCheck
   ghFlee1Duration: 4000,
   ghFlee2Duration: 3000,
+  pacLossLifePause: 2000, // duration of animation after eaten by ghost
+  pacNextLifePause: 1000,
 }
 
-// –––––– 2: TIME –––––– //
+// –––––– 2: TIME TRACKERS –––––– //
 
 // master time keepers for a game
 let timekeeper
@@ -122,6 +124,10 @@ let gh1MoveInterval
 let gh2MoveInterval
 let gh3MoveInterval
 let gh4MoveInterval
+
+// for pac recovery after losing a life
+let pacLossLifeTimer
+let pacNextLifeTimer
 
 // –––––– 3: PLAY –––––– //
 
@@ -165,11 +171,14 @@ function startGame() {
   showPlayerState()
   mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
   timekeeper = setTimeout(() => {
-    console.log('Start timekeeper: ' + timekeeper)
+    // console.log('Start timekeeper: ' + timekeeper)
+    mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = ''
     gameInProgress = true
     playerStateNow.playing = gameInProgress
-    pacMoveNow()
-    ghMove()
+    if (gameInProgress === true) {
+      pacMoveNow()
+      ghMoveNow()
+    }
     // console.log('Game in progress? ' + gameInProgress)
   }, timers.startGamePause)
   gameStateIntervalCheck = setInterval(() => {
@@ -194,20 +203,25 @@ function playAgain() {
 
 // reset timers used in gameplay
 function clearGameTimers() {
-  console.log('clearGameTimers -- timekeeper: ' + timekeeper + '• gameStateIntervalCheck: ' + gameStateIntervalCheck)
+  console.log('clearGameTimers -- timekeeper: ' + timekeeper + ' • gameStateIntervalCheck: ' + gameStateIntervalCheck)
   clearInterval(gameStateIntervalCheck)
   clearTimeout(timekeeper)
+}
+
+// reset all timers
+function clearAllTimers() {
+  clearActorTimers()
+  clearGameTimers()
+  clearTimeout(alertTimer)
+}
+
+// reset actor timers
+function clearActorTimers() {
   clearInterval(gh1MoveInterval)
   clearInterval(gh2MoveInterval)
   clearInterval(gh3MoveInterval)
   clearInterval(gh4MoveInterval)
   clearInterval(pacMoveInterval)
-}
-
-// reset all timers
-function clearAllTimers() {
-  clearGameTimers()
-  clearTimeout(alertTimer)
 }
 
 // initialise variables for a new game (from level 1)
@@ -289,13 +303,23 @@ function addGhostHQ() {
   })
 }
 
-// place characters at their start positions
+// place characters at their start positions (at new game)
 function startPositions() {
   mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1')
   mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.add('gh2')
   mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.add('gh3')
   mazeTileIndex[actorsStateNow[levelNow].gh4.tile].classList.add('gh4')
   mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac')
+}
+
+// place characters at their start positions (after life lost)
+function resetPositions() {
+  mazeTileIndex[actorsStateNow[levelNow].gh1.tile] = mazeTileIndex[actorsStateSetup[levelNow].gh1.tile]
+  mazeTileIndex[actorsStateNow[levelNow].gh2.tile] = mazeTileIndex[actorsStateSetup[levelNow].gh2.tile]
+  mazeTileIndex[actorsStateNow[levelNow].gh3.tile] = mazeTileIndex[actorsStateSetup[levelNow].gh3.tile]
+  mazeTileIndex[actorsStateNow[levelNow].gh4.tile] = mazeTileIndex[actorsStateSetup[levelNow].gh4.tile]
+  mazeTileIndex[actorsStateNow[levelNow].pac.tile] = mazeTileIndex[actorsStateSetup[levelNow].pac.tile]
+  startPositions()
 }
 
 // remove all characters in the maze
@@ -305,7 +329,7 @@ function removeAllActors() {
   mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.remove('gh2')
   mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.remove('gh3')
   mazeTileIndex[actorsStateNow[levelNow].gh4.tile].classList.remove('gh4')
-  mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac')
+  mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac', 'pac-end')
 }
 
 // hide start button and cover panel
@@ -346,7 +370,6 @@ function pacMoveCtrl(e) {
     mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac')
   }
 }
-
 // pac move directions
 function pacMoveN() {
   pacMoveInterval = setInterval(function () {
@@ -433,7 +456,7 @@ function getRandomDir() {
 // (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - (mazeSetup[levelNow].mazeWidth)].classList.contains('ghostHQ'))
 
 // move all ghosts
-function ghMove() {
+function ghMoveNow() {
   if (gameInProgress === true) {
     gh1Move()
     // gh2Move()
@@ -542,11 +565,29 @@ function eatItems() {
 // pac and ghosts meet
 function meetEnemy() {
   if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.contains('pac'))) {
-  // if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
+    // if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
     switch (ghStateNow) {
       case 'hunt':
         playerStateNow.life -= 1
         lifeTextEl.innerText = playerStateNow.life
+        gameInProgress = false
+        clearActorTimers()
+        // show sprite for pacman defeated
+        mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac') // remove all variations of pac here?
+        mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac-end')
+        pacLossLifeTimer = setTimeout(function () {
+          // mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac-end')
+          removeAllActors()
+          resetPositions()
+          pacNextLifeTimer = setTimeout(function () {
+            // clearTimeout(pacLossLifeTimer)
+            mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
+          }, timers.pacNextLifePause)
+        }, 30000)
+        // timers.pacLossLifePause
+
+
+
         console.log(ghStateNow)
         break
       case 'flee1': console.log(ghStateNow)
@@ -605,7 +646,6 @@ startBtnEl.addEventListener('click', startGame)
 replayBtnEl.addEventListener('click', playAgain)
 function pacMoveNow() {
   document.addEventListener('keydown', pacMoveCtrl)
-  mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = ''
 }
 window.addEventListener('load', onLoad)
 
@@ -645,6 +685,6 @@ function test() {
   console.log(`
   actorsStateNow: `)
   console.log(actorsStateNow)
-  console.log('countDotRemain: ' + typeof countDotRemain)
-  console.log('countPowRemain: ' + typeof countPowRemain)
+  console.log('countDotRemain: ' + countDotRemain)
+  console.log('countPowRemain: ' + countPowRemain)
 }
