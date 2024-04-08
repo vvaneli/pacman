@@ -57,18 +57,22 @@ const actorsStateSetup = {
       // tile: 409,  // near left portal
       // tile: 431,  // near right portal
       dir: 'e',
+      return: false, // is this ghost in return mode?
     },
     gh2: {
       tile: 420,
       dir: 'n',
+      return: false,
     },
     gh3: {
       tile: (418 + 1), //! moved over until an exit function is defined
       dir: 'e',
+      return: false,
     },
     gh4: {
       tile: (422 - 1), //! moved over until an exit function is defined
       dir: 'w',
+      return: false,
     },
   },
 }
@@ -84,7 +88,7 @@ const itemsSetup = {
 const scoreSetup = {
   dot: 10,
   pow: 50,
-  ghosts: [200, 4000, 800, 1600],
+  ghosts: [200, 400, 800, 1600],
 }
 
 // player start status
@@ -150,8 +154,7 @@ let actorsStateNow = {}
 let gameInProgress = false
 let levelNow
 
-// ghost status options:
-// const ghStates = ['hunt', 'flee1', 'flee2', 'return']
+// ghost status options: ['hunt', 'flee1', 'flee2']
 let ghStateNow = 'hunt'
 
 // for game grid tile divs
@@ -201,7 +204,7 @@ function gameOn() {
   }, timers.startGamePause)
   gameStateIntervalCheck = setInterval(() => {
     if (gameInProgress === true) {
-      meetEnemy()
+      meetEnemyGh1()
       winGameLevel()
     }
   }, timers.ghMoveSpeed)
@@ -487,31 +490,33 @@ function gh1Move() {
   }
 }
 function gh1SpriteOptions() {
-  switch (ghStateNow) {
-    case 'hunt':
-      if (actorsStateNow[levelNow].gh1.dir === 'n') {
-        gh1Sprite = 'gh1-ns'
-      } else if (actorsStateNow[levelNow].gh1.dir === 's') {
-        gh1Sprite = 'gh1-ns'
-      } else {
-        gh1Sprite = 'gh1-ew'
-      }
-      break
-    case 'flee1': gh1Sprite = 'gh-flee1'
-      break
-    case 'flee2': gh1Sprite = 'gh-flee2'
-      break
-    case 'return':
-      if (actorsStateNow[levelNow].gh1.dir === 'n') {
-        gh1Sprite = 'gh-return-ns'
-      } else if (actorsStateNow[levelNow].gh1.dir === 's') {
-        gh1Sprite = 'gh-return-ns'
-      } else {
-        gh1Sprite = 'gh-return-ew'
-      }
-      break
+  if (actorsStateNow[levelNow].gh1.return === false) {
+    switch (ghStateNow) {
+      case 'hunt':
+        if (actorsStateNow[levelNow].gh1.dir === 'n') {
+          gh1Sprite = 'gh1-ns'
+        } else if (actorsStateNow[levelNow].gh1.dir === 's') {
+          gh1Sprite = 'gh1-ns'
+        } else {
+          gh1Sprite = 'gh1-ew'
+        }
+        break
+      case 'flee1': gh1Sprite = 'gh-flee1'
+        break
+      case 'flee2': gh1Sprite = 'gh-flee2'
+        break
+    }
+  } else {
+    if (actorsStateNow[levelNow].gh1.dir === 'n') {
+      gh1Sprite = 'gh-return-ns'
+    } else if (actorsStateNow[levelNow].gh1.dir === 's') {
+      gh1Sprite = 'gh-return-ns'
+    } else {
+      gh1Sprite = 'gh-return-ew'
+    }
   }
 }
+
 function gh1MoveN() {
   gh1MoveInterval = setInterval(function () {
     if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - (mazeSetup[levelNow].mazeWidth)].classList.contains('path')) {
@@ -620,56 +625,62 @@ function eatItems() {
   // console.log('2 score: ' + playerStateNow.score + ' • dots: ' + countDotRemain + '/' + itemsSetup[levelNow].dots.length + ' • pows: ' + countPowRemain + '/' + itemsSetup[levelNow].pows.length)
 }
 
-// pac and ghosts meet
-function meetEnemy() {
+// pac and gh1 encounter
+function meetEnemyGh1() {
   if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains(gh1Sprite)) || (mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.contains(pacSprite))) {
     // if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
-    switch (ghStateNow) {
-      case 'hunt':
-        pacMoveNot()
-        playerStateNow.life -= 1
-        lifeTextEl.innerText = playerStateNow.life
-        gameInProgress = false
-        clearActorTimers()
-        // show sprite for pacman defeated
-        pacSprite = 'pac-end'
-        // mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac') // remove all variations of pac here?
-        // mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac-end')
-        if (playerStateNow.life <= 0) {
-          lostGameLevel()
-        } else {
-          pacLossLifeTimer = setTimeout(function () {
-            // mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac-end')
-            removeAllActors()
-            // put characters back in their start tile index
-            actorsStateReset()
-            startPositions()
-            pacNextLifeTimer = setTimeout(function () {
-              mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
-              gameOn()
-            }, timers.pacNextLifePause)
-          }, timers.pacLossLifePause)
-        }
-        break
-      case ('flee1' || 'flee2'):
-        console.log(ghStateNow)
+    if (actorsStateNow[levelNow].gh1.return === false) {
+      if (ghStateNow === 'hunt') {
+        console.log('meetEnemyGh1 > ghStateNow (hunt?): ' + ghStateNow)
+        eatPac()
+      } else { //if ((ghStateNow === 'flee1') || (ghStateNow === 'flee2'))
+        console.log('meetEnemyGh1 > ghStateNow (flee?):' + ghStateNow)
         eatGhost()
-        break
-      case 'return': console.log(ghStateNow)
-        break   
+        actorsStateNow[levelNow].gh1.return = true // update ghost id
+        // gh1Sprite = 'gh-return-ew' // update ghost id
+        // console.log('meetEnemyGh1 > ghStateNow (return?):' + ghStateNow)
+      }
+    } else {
+      // gh1 return to ghst HQ
     }
   }
 }
 
-// pac eats ghosts
+// Any ghost eats pac
+function eatPac() {
+  pacMoveNot()
+  playerStateNow.life -= 1
+  lifeTextEl.innerText = playerStateNow.life
+  gameInProgress = false
+  clearActorTimers()
+  // show sprite for pacman defeated
+  pacSprite = 'pac-end'
+  if (playerStateNow.life <= 0) {
+    lostGameLevel()
+  } else {
+    pacLossLifeTimer = setTimeout(function () {
+      // mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac-end'
+      removeAllActors()
+      // put characters back in their start tile index
+      actorsStateReset()
+      startPositions()
+      pacNextLifeTimer = setTimeout(function () {
+        mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
+        gameOn()
+      }, timers.pacNextLifePause)
+    }, timers.pacLossLifePause)
+  }
+}
+
+// pac eats any ghost
+// actorsStateNow[levelNow].gh1.return === true // <-- REQUIRED AFTER FUNCTION & update ghost id
+// gh1Sprite = 'gh-return-ew' // <-- REQUIRED AFTER FUNCTION & update ghost id
 function eatGhost() {
-  playerStateNow.score += scoreSetup.ghosts[eatGhostCount - 1]
+  playerStateNow.score += scoreSetup.ghosts[eatGhostCount]
   scoreTextEl.innerText = playerStateNow.score
   eatGhostCount += 1
-
-  console.log('eatGhostCount: ' + eatGhostCount + ', score: ' + scoreSetup.ghosts[s])
-
-  if (eatGhostCount === 4) {
+  console.log('eatGhostCount: ' + eatGhostCount + ', score: ' + scoreSetup.ghosts[eatGhostCount])
+  if (eatGhostCount >= scoreSetup.ghosts.length) {
     clearTimeout(eatGhostTimer)
     eatGhostCount = 0
   }

@@ -124,7 +124,9 @@ h1 {
 .gh4-ns,
 .gh4-ew,
 .gh-flee1,
-.gh-flee2
+.gh-flee2,
+.gh-return-ns,
+.gh-return-ew
  {
   background: url(/img/pacman_sprites_5w4h_16px_@2x.gif);
   background-size: 500%;
