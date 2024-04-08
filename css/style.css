@@ -186,7 +186,7 @@ background: url(/img/dot1_16px.svg);
 }
 
 #gameCover {
-  /* background-image: url(/img/game-start_800w600h.png); */
+  background-image: url(/img/game-start_800w600h.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: auto;
@@ -198,10 +198,13 @@ background: url(/img/dot1_16px.svg);
   text-align: center;
 }
 
-#start {
+#start, #replay {
   margin: calc(var(--imgCoverHeight)/4) auto;
   width: calc(var(--mazeWidth)/2);
+}
 
+#replay {
+  display: none;
 }
 
 /* GAME AREA: during game */

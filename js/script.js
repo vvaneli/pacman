@@ -5,8 +5,10 @@ const testBtnEl = document.querySelector('.test')
 
 // Start Game
 const startBtnEl = document.querySelector('#start')
-const imgCoverHeadEl = document.querySelector('#imgCoverHeadline')
-const gameCoverEl = document.querySelector('#gameCover')
+const replayBtnEl = document.querySelector('#replay')
+
+let imgCoverHeadEl = document.querySelector('#imgCoverHeadline')
+let gameCoverEl = document.querySelector('#gameCover')
 
 // Game board
 const scoreTextEl = document.querySelector('#score')
@@ -50,10 +52,10 @@ const actorsStateSetup = {
       dir: 'w',
     },
     gh1: {
-      tile: 333,
+      // tile: 333,
       // tile: 586,  // for testing only
       // tile: 409,  // near left portal
-      // tile: 431,  // near right portal
+      tile: 431,  // near right portal
       dir: 'e',
     },
     gh2: {
@@ -146,6 +148,9 @@ let randomDir = ''
 let countDotRemain
 let countPowRemain
 
+// count no. of ghosts eaten by pacman in a pow period
+let eatGhostCount = 0
+
 //? ON PAGE LOAD
 
 function onLoad() {
@@ -163,14 +168,8 @@ function startGame() {
     console.log('Start timekeeper: ' + timekeeper)
     gameInProgress = true
     playerStateNow.playing = gameInProgress
-    // only let characters move if game is in progress
-    if (gameInProgress === true) {
-      pacMoveNow()
-      gh1Move()
-      // gh2Move()
-      // gh3Move()
-      // gh4Move()
-    }
+    pacMoveNow()
+    ghMove()
     // console.log('Game in progress? ' + gameInProgress)
   }, timers.startGamePause)
   gameStateIntervalCheck = setInterval(() => {
@@ -183,7 +182,14 @@ function startGame() {
     }
     // console.log('Game in progress FALSE? ' + gameInProgress)
   }, timers.ghMoveSpeed)
+}
 
+// restart the game
+function playAgain() {
+  clearAllTimers()
+  newGame()
+  drawMaze()
+  startGame()
 }
 
 // reset timers used in gameplay
@@ -210,11 +216,11 @@ function newGame() {
   playerStateNow = {}
   actorsStateNow = Object.assign({}, actorsStateSetup)
   playerStateNow = Object.assign({}, playerStateSetup)
-  newGameLevel()
+  levelNow = 'level'.concat(playerStateNow.level)
 }
 
 // initialise variables for level up
-function newGameLevel() {
+function levelUp() {
   clearAllTimers()
   levelNow = 'level'.concat(playerStateNow.level)
   countDotRemain = []
@@ -293,6 +299,7 @@ function startPositions() {
 
 // remove all characters in the maze
 function removeAllActors() {
+  gameInProgress = false
   mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1')
   mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.remove('gh2')
   mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.remove('gh3')
@@ -306,6 +313,17 @@ function showMaze() {
   startBtnEl.style.display = 'none'
   imgCoverHeadEl.style.display = 'none'
   gameCoverEl.style.display = 'none'
+}
+
+// show start button and cover panel
+function hideMaze() {
+  removeAllActors()
+  gameCoverEl.style.backgroundImage = 'url(/img/game-end_800w600h.png)'
+  replayBtnEl.removeAttribute('disabled')
+  replayBtnEl.style.display = 'block'
+  imgCoverHeadEl.innerText = 'Score: ' + playerStateNow.score
+  imgCoverHeadEl.style.display = 'block'
+  gameCoverEl.style.display = 'flex'
 }
 
 // move pacman
@@ -407,6 +425,20 @@ function getRandomDir() {
     default: return randomDir = 'w'
   }
 }
+
+// exit ghost HG
+// (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - (mazeSetup[levelNow].mazeWidth)].classList.contains('ghostHQ'))
+
+// move all ghosts
+function ghMove() {
+  if (gameInProgress === true) {
+    gh1Move()
+    // gh2Move()
+    // gh3Move()
+    // gh4Move()
+  }
+}
+
 // move ghost1 randomly
 function gh1Move() {
   switch (actorsStateNow[levelNow].gh1.dir = getRandomDir()) {
@@ -422,9 +454,7 @@ function gh1Move() {
 }
 function gh1MoveN() {
   gh1MoveInterval = setInterval(function () {
-    // console.log('gh1 N1: ' + gh1MoveInterval)
-    // if the next tile has certain css class(es), remove ghost img in this tile, update index to that next tile, add ghost image in new tile
-    if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - (mazeSetup[levelNow].mazeWidth)].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - (mazeSetup[levelNow].mazeWidth)].classList.contains('ghostHQ'))) {
+    if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - (mazeSetup[levelNow].mazeWidth)].classList.contains('path')) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1')
       actorsStateNow[levelNow].gh1.tile -= mazeSetup[levelNow].mazeWidth
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1')
@@ -437,12 +467,10 @@ function gh1MoveN() {
       gh1Move() // choose a new direction
     }
   }, timers.ghMoveSpeed)
-  // console.log('gh1 N2: ' + gh1MoveInterval)
 }
 function gh1MoveS() {
   gh1MoveInterval = setInterval(function () {
-    // console.log('gh1 S1: ' + gh1MoveInterval)
-    if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + (mazeSetup[levelNow].mazeWidth)].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + (mazeSetup[levelNow].mazeWidth)].classList.contains('ghostHQ'))) {
+    if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + (mazeSetup[levelNow].mazeWidth)].classList.contains('path')) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1')
       actorsStateNow[levelNow].gh1.tile += mazeSetup[levelNow].mazeWidth
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1')
@@ -451,18 +479,17 @@ function gh1MoveS() {
       gh1Move() // choose a new direction
     }
   }, timers.ghMoveSpeed)
-  // console.log('gh1 S2: ' + gh1MoveInterval)
 }
-function gh1MoveE() {
+function gh1MoveW() {
   gh1MoveInterval = setInterval(function () {
-    // console.log('gh1 E1: ' + gh1MoveInterval)
-    // first check if ghost is at the right portal tile
-    if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[1]) {
+    // first check if ghost is at the left portal tile 406
+    if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
-      actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[0];
-      (actorsStateNow[levelNow].gh1.tile)++;
+      actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1];
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
-    } else if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('ghotHQ'))) {
+      clearInterval(gh1MoveInterval)
+      gh1MoveW()
+    } else if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) - 1].classList.contains('path')) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
       (actorsStateNow[levelNow].gh1.tile)--;
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
@@ -471,18 +498,18 @@ function gh1MoveE() {
       gh1Move() // choose a new direction
     }
   }, timers.ghMoveSpeed)
-  // console.log('gh1 E2: ' + gh1MoveInterval)
 }
-
-function gh1MoveW() {
+function gh1MoveE() {
   gh1MoveInterval = setInterval(function () {
-    // console.log('gh1 W1: ' + gh1MoveInterval)
-    // first check if ghost is at the left portal tile
-    if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
+    // first check if ghost is at the right portal tile 434
+    if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[1]) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
-      actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1];
+      actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[0];
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
-    } else if ((mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('path')) || (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('ghotHQ'))) {
+      clearInterval(gh1MoveInterval)
+      console.log(actorsStateNow[levelNow].gh1.tile)
+      gh1MoveE()
+    } else if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('path')) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
       (actorsStateNow[levelNow].gh1.tile)++;
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
@@ -491,17 +518,6 @@ function gh1MoveW() {
       gh1Move() // choose a new direction
     }
   }, timers.ghMoveSpeed)
-  // console.log('gh1 W2: ' + gh1MoveInterval)
-}
-function gh1MoveWPortal() {
-  if (actorsStateNow[levelNow].gh1.tile === mazeSetup[levelNow].mazePortals.portal1[0]) {
-    mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
-    actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1];
-    mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
-    gh1MoveW()
-  } else {
-    gh1MoveW()
-  }
 }
 
 // pac eats dots and pows
@@ -523,21 +539,21 @@ function eatItems() {
 
 // pac and ghosts meet
 function meetEnemy() {
-    if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
-      switch (ghStateNow) {
-        case 'hunt':
-          playerStateNow.life -= 1
-          lifeTextEl.innerText = playerStateNow.life
-          console.log(ghStateNow)
-          break
-        case 'flee1': console.log(ghStateNow)
-          break
-        case 'flee2': console.log(ghStateNow)
-          break
-        case 'return': console.log(ghStateNow)
-          break
-      }
+  if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
+    switch (ghStateNow) {
+      case 'hunt':
+        playerStateNow.life -= 1
+        lifeTextEl.innerText = playerStateNow.life
+        console.log(ghStateNow)
+        break
+      case 'flee1': console.log(ghStateNow)
+        break
+      case 'flee2': console.log(ghStateNow)
+        break
+      case 'return': console.log(ghStateNow)
+        break
     }
+  }
 }
 
 // lost all lives
@@ -564,7 +580,7 @@ function startNextLevel() {
   console.log('Level Up!')
   playerStateNow.level += 0  // for single level game
   playerStateNow.levelDecade += 10
-  newGameLevel()
+  levelUp()
   levelTextEl.innerText = playerStateNow.levelDecade
   endGame() // for single level game
 }
@@ -573,16 +589,17 @@ function startNextLevel() {
 function endGame() {
   gameInProgress = false
   playerStateNow.playing = false
+  mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.end + '</h3>'
   alertTimer = setTimeout(() => {
-    mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.end + '</h3>'
     // mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">Score: ' + playerStateNow.score + '</h3>'
+    hideMaze()
   }, timers.endGamePause)
 }
-
 
 //? EVENTS
 
 startBtnEl.addEventListener('click', startGame)
+replayBtnEl.addEventListener('click', playAgain)
 function pacMoveNow() {
   document.addEventListener('keydown', pacMoveCtrl)
   mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = ''
@@ -595,6 +612,8 @@ window.addEventListener('load', onLoad)
 testBtnEl.addEventListener('click', test)
 
 function test() {
+  // hideMaze()
+  removeAllActors()
   // console.log('alert timer on press ' + gameStateIntervalCheck)
   console.log(`TIMER CHECKS ` + `
   timekeeper: ` + timekeeper + `
@@ -607,7 +626,7 @@ function test() {
   gh4MoveInterval: ` + gh4MoveInterval + `
   
  STATE OF PLAY ` + `
- gameInProgress: ` + gameInProgress  +  `
+ gameInProgress: ` + gameInProgress + `
  playerStateNow.life: ` + playerStateNow.life + `
  playerStateNow.level: ` + playerStateNow.level)
 }
