@@ -88,7 +88,6 @@ h1 {
 }
 
 /* ACTORS */
-/* background-position: <pixels shifted right>px <pixels shifted down>px; */
 
 .path, .ghostHQ {
   /* switch this on for position check only */
@@ -99,24 +98,15 @@ h1 {
   /* background-color: rgba(244, 76, 24, 0.7); */
 }
 
-/* .dot, */
+.dot,
 .pow,
-/* .pac, */
+.pac,
 .gh1,
 .gh2,
 .gh3,
 .gh4 {
-  /* background: url(/img/pacman_sprites_16px.svg); */
-  /* background-size: 600%; */
-  
-  /* background: url(/img/pacman_sprites_7w4h_16px.gif);
-  background-size: 700%; */
   background: url(/img/pacman_sprites_5w4h_16px_@2x.gif);
   background-size: 500%;
-}
-.pac {
-background: url(/img/pacman_sprites-pac_1w4h_16px_2x.gif);
-background-size: 100%;
 }
 
 .pac,
@@ -128,15 +118,10 @@ background-size: 100%;
 }
 
 .dot {
-  /* background-position: 0 calc(var(--mazeTileWidth) * -6); */
-  /* background: url('data:image/svg+xml;utf8,<svg ...> ... </svg>') */
-  /* background: url(data:image/svg+xml;utf8,<svg id="dot1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="10" y="10" width="4" height="4" fill="#ffb7ae" stroke-width="0"/></svg>); */
-background: url(/img/dot1_16px.svg);
+  background-position: calc(var(--mazeTileWidth) * -4) calc(var(--mazeTileWidth) * -2);
 }
 .pow {
   background-position: calc(var(--mazeTileWidth) * -4) calc(var(--mazeTileWidth) * -3);
-    /* background: url('data:image/svg+xml;utf8,<svg id="pow1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="24 9 23 9 23 6 22 6 22 5 21 5 21 4 20 4 20 3 19 3 19 2 18 2 18 1 15 1 15 0 9 0 9 1 6 1 6 2 5 2 5 3 4 3 4 4 3 4 3 5 2 5 2 6 1 6 1 9 0 9 0 15 1 15 1 18 2 18 2 19 3 19 3 20 4 20 4 21 5 21 5 22 6 22 6 23 9 23 9 24 15 24 15 23 18 23 18 22 19 22 19 21 20 21 20 20 21 20 21 19 22 19 22 18 23 18 23 15 24 15 24 9" fill="#ffb7ae" stroke-width="0"/></svg>'); */
-    /* background: url(/img/pow1_16px.svg); */
   }
 .gh1 {
   background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -1);
@@ -151,8 +136,9 @@ background: url(/img/dot1_16px.svg);
   background-position: calc(var(--mazeTileWidth) * -4) calc(var(--mazeTileWidth) * -1);
 }
 .pac {
-  background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -2);
-  
+  background-position: 0 calc(var(--mazeTileWidth) * -2);
+  /* Starting position (circlular pac): */
+  /* background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -2); */
 }
 
 /* GAME AREA */
@@ -174,7 +160,6 @@ background: url(/img/dot1_16px.svg);
   width: var(--mazeWidth);
   height: var(--mazeHeight);
 }
-
 
 /* GAME AREA: start and end of game */
 

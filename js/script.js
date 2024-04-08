@@ -52,10 +52,10 @@ const actorsStateSetup = {
       dir: 'w',
     },
     gh1: {
-      // tile: 333,
+      tile: 333,
       // tile: 586,  // for testing only
       // tile: 409,  // near left portal
-      tile: 431,  // near right portal
+      // tile: 431,  // near right portal
       dir: 'e',
     },
     gh2: {
@@ -507,7 +507,6 @@ function gh1MoveE() {
       actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[0];
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add('gh1');
       clearInterval(gh1MoveInterval)
-      console.log(actorsStateNow[levelNow].gh1.tile)
       gh1MoveE()
     } else if (mazeTileIndex[(actorsStateNow[levelNow].gh1.tile) + 1].classList.contains('path')) {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1');
