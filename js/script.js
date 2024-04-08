@@ -192,7 +192,7 @@ function gameOn() {
     if (gameInProgress === true) {
       meetEnemy()
       // lostGameLevel()
-      // winGameLevel()
+      winGameLevel()
     }
     // console.log('Game in progress FALSE? ' + gameInProgress)
   }, timers.ghMoveSpeed)
