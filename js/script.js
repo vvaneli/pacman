@@ -129,6 +129,9 @@ let gh4MoveInterval
 let pacLossLifeTimer
 let pacNextLifeTimer
 
+// for ghost flee1 and flee 2 periods
+let eatGhostTimer
+
 // –––––– 3: CSS SPRITES –––––– //
 
 let pacSprite = 'pac-w'
@@ -598,12 +601,23 @@ function eatItems() {
     countDotRemain -= 1
   } else if (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('pow')) {
     mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pow')
-    ghStateNow = 'flee1'
     playerStateNow.score += scoreSetup.pow
     scoreTextEl.innerText = playerStateNow.score
     countPowRemain -= 1
+    eatGhostCount = 0
+    ghStateNow = 'flee1'
+    eatGhostTimer = setTimeout(function () {
+      console.log('flee 1 ended')
+      ghStateNow = 'flee2'
+      clearTimeout(eatGhostTimer)
+      eatGhostTimer = setTimeout(function () {
+        console.log('flee 2 ended')
+        ghStateNow = 'hunt'
+        clearTimeout(eatGhostTimer)
+      }, timers.ghFlee2Duration)
+    }, timers.ghFlee1Duration)
   }
-  console.log('2 score: ' + playerStateNow.score + ' • dots: ' + countDotRemain + '/' + itemsSetup[levelNow].dots.length + ' • pows: ' + countPowRemain + '/' + itemsSetup[levelNow].pows.length)
+  // console.log('2 score: ' + playerStateNow.score + ' • dots: ' + countDotRemain + '/' + itemsSetup[levelNow].dots.length + ' • pows: ' + countPowRemain + '/' + itemsSetup[levelNow].pows.length)
 }
 
 // pac and ghosts meet
@@ -637,17 +651,27 @@ function meetEnemy() {
           }, timers.pacLossLifePause)
         }
         break
-      case 'flee1':
+      case ('flee1' || 'flee2'):
         console.log(ghStateNow)
-        // gameInProgress = false
-
-        // gameInProgress = true
-        break
-      case 'flee2': console.log(ghStateNow)
+        eatGhost()
         break
       case 'return': console.log(ghStateNow)
-        break
+        break   
     }
+  }
+}
+
+// pac eats ghosts
+function eatGhost() {
+  playerStateNow.score += scoreSetup.ghosts[eatGhostCount - 1]
+  scoreTextEl.innerText = playerStateNow.score
+  eatGhostCount += 1
+
+  console.log('eatGhostCount: ' + eatGhostCount + ', score: ' + scoreSetup.ghosts[s])
+
+  if (eatGhostCount === 4) {
+    clearTimeout(eatGhostTimer)
+    eatGhostCount = 0
   }
 }
 
@@ -731,6 +755,7 @@ function test() {
   
   STATE OF PLAY ` + `
   gameInProgress: ` + gameInProgress + `
+  ghStateNow: ` + ghStateNow + `
   playerStateNow.life: ` + playerStateNow.life + `
   playerStateNow.level: ` + playerStateNow.level + `
  
