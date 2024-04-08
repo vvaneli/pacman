@@ -137,8 +137,14 @@ h1 {
 }
 .pac {
   background-position: 0 calc(var(--mazeTileWidth) * -2);
+  /* for testing: */
+  /* background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -3); */
   /* Starting position (circlular pac): */
   /* background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -2); */
+}
+
+.pac-end {
+    background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -3);
 }
 
 /* GAME AREA */
@@ -171,7 +177,7 @@ h1 {
 }
 
 #gameCover {
-  background-image: url(/img/game-start_800w600h.png);
+  /* background-image: url(/img/game-start_800w600h.png); */
   background-position: center;
   background-repeat: no-repeat;
   background-size: auto;

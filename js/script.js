@@ -215,6 +215,7 @@ function newGame() {
   actorsStateNow = {}
   playerStateNow = {}
   actorsStateNow = Object.assign({}, actorsStateSetup)
+  actorsStateNow = JSON.parse(JSON.stringify(actorsStateSetup))
   playerStateNow = Object.assign({}, playerStateSetup)
   levelNow = 'level'.concat(playerStateNow.level)
 }
@@ -318,7 +319,9 @@ function showMaze() {
 // show start button and cover panel
 function hideMaze() {
   removeAllActors()
-  gameCoverEl.style.backgroundImage = 'url(/img/game-end_800w600h.png)'
+  actorsStateNow = {}
+  mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = ''
+  // gameCoverEl.style.backgroundImage = 'url(/img/game-end_800w600h.png)' // COMMENTED OUT FOR TESTING ONLY
   replayBtnEl.removeAttribute('disabled')
   replayBtnEl.style.display = 'block'
   imgCoverHeadEl.innerText = 'Score: ' + playerStateNow.score
@@ -612,7 +615,7 @@ testBtnEl.addEventListener('click', test)
 
 function test() {
   // hideMaze()
-  removeAllActors()
+  // removeAllActors()
   // console.log('alert timer on press ' + gameStateIntervalCheck)
   console.log(`TIMER CHECKS ` + `
   timekeeper: ` + timekeeper + `
@@ -624,8 +627,21 @@ function test() {
   gh3MoveInterval: ` + gh3MoveInterval + `
   gh4MoveInterval: ` + gh4MoveInterval + `
   
- STATE OF PLAY ` + `
- gameInProgress: ` + gameInProgress + `
- playerStateNow.life: ` + playerStateNow.life + `
- playerStateNow.level: ` + playerStateNow.level)
+  STATE OF PLAY ` + `
+  gameInProgress: ` + gameInProgress + `
+  playerStateNow.life: ` + playerStateNow.life + `
+  playerStateNow.level: ` + playerStateNow.level + `
+ 
+  playerStateSetup:`)
+  console.log(playerStateSetup)
+  console.log(`
+  playerStateNow: `)
+  console.log(playerStateNow)
+
+  console.log(`
+  actorsStateSetup: `)
+  console.log(actorsStateSetup)
+  console.log(`
+  actorsStateNow: `)
+  console.log(actorsStateNow)
 }
