@@ -104,6 +104,8 @@ h1 {
   background-size: 500%;
 }
 
+.gh-flee1,
+.pac-end,
 .pac,
 .gh1,
 .gh2,
@@ -189,7 +191,7 @@ h1 {
 }
 
 /* COMMON GHOST STATES */
-/* .gh-flee1 {
+.gh-flee1 {
   background-position: calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2);
 }
 .gh-flee2 {
@@ -200,7 +202,7 @@ h1 {
 }
 .gh-return-EW {
   background-position: calc(var(--mazeTileWidth) * -3) calc(var(--mazeTileWidth) * -3);
-} */
+}
 
 /* GAME AREA */
 

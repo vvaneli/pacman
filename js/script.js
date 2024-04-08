@@ -565,16 +565,19 @@ function ghFlee() {
   ghStateNow = 'flee1'
   console.log(ghStateNow)
   // gameInProgress = false
-  console.log('levelNow ' + levelNow)
-  mazeTileIndex[actorsStateNow[levelNow].gh1.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
-  mazeTileIndex[actorsStateNow[levelNow].gh2.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
-  mazeTileIndex[actorsStateNow[levelNow].gh3.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
-  mazeTileIndex[actorsStateNow[levelNow].gh4.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
-  // mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1').add('gh-flee1')
-  // mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.replace('gh2', 'gh-flee1')
-  // mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.remove('gh3').add('gh-flee1')
-  // mazeTileIndex[actorsStateNow[levelNow].gh4.tile].classList.remove('gh4').add('gh-flee1')
+  // mazeTileIndex[actorsStateNow[levelNow].gh1.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
+  // mazeTileIndex[actorsStateNow[levelNow].gh2.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
+  // mazeTileIndex[actorsStateNow[levelNow].gh3.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
+  // mazeTileIndex[actorsStateNow[levelNow].gh4.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
+//   const ghStateChangePause = setTimeout(function () {
+// ghMoveNow()
+//   }, 1000)
+  mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.replace('gh1', 'gh-flee1')
+  mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.replace('gh2', 'gh-flee1')
+  mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.replace('gh3', 'gh-flee1')
+  mazeTileIndex[actorsStateNow[levelNow].gh4.tile].classList.replace('gh4', 'gh-flee1')
   // gameInProgress = true
+  console.log('levelNow ' + levelNow)
 }
 
 // pac and ghosts meet
