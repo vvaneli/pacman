@@ -230,13 +230,17 @@ function newGame() {
   playerStateNow = {}
   playerStateNow = Object.assign({}, playerStateSetup)
   setLevel()
+  actorsStateReset()
 }
 
-// initialise variables for level up
-function setLevel() {
+// reset actor variables to default
+function actorsStateReset() {
   actorsStateNow = {}
   actorsStateNow = Object.assign({}, actorsStateSetup)
   actorsStateNow = JSON.parse(JSON.stringify(actorsStateSetup))
+}
+// initialise variables for level up
+function setLevel() {
   levelNow = 'level'.concat(playerStateNow.level)
   countDotRemain = []
   countPowRemain = []
@@ -310,16 +314,6 @@ function startPositions() {
   mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.add('gh3')
   mazeTileIndex[actorsStateNow[levelNow].gh4.tile].classList.add('gh4')
   mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add('pac')
-}
-
-// place characters at their start positions (after life lost)
-function resetPositions() {
-  mazeTileIndex[actorsStateNow[levelNow].gh1.tile] = mazeTileIndex[actorsStateSetup[levelNow].gh1.tile]
-  mazeTileIndex[actorsStateNow[levelNow].gh2.tile] = mazeTileIndex[actorsStateSetup[levelNow].gh2.tile]
-  mazeTileIndex[actorsStateNow[levelNow].gh3.tile] = mazeTileIndex[actorsStateSetup[levelNow].gh3.tile]
-  mazeTileIndex[actorsStateNow[levelNow].gh4.tile] = mazeTileIndex[actorsStateSetup[levelNow].gh4.tile]
-  mazeTileIndex[actorsStateNow[levelNow].pac.tile] = mazeTileIndex[actorsStateSetup[levelNow].pac.tile]
-  startPositions()
 }
 
 // remove all characters in the maze
@@ -568,6 +562,7 @@ function meetEnemy() {
     // if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
     switch (ghStateNow) {
       case 'hunt':
+        pacMoveNot()
         playerStateNow.life -= 1
         lifeTextEl.innerText = playerStateNow.life
         gameInProgress = false
@@ -578,14 +573,21 @@ function meetEnemy() {
         pacLossLifeTimer = setTimeout(function () {
           // mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac-end')
           removeAllActors()
-          resetPositions()
+          // put characters back in their start tile index
+          actorsStateReset()
+          startPositions()
           pacNextLifeTimer = setTimeout(function () {
-            // clearTimeout(pacLossLifeTimer)
             mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
+            gameInProgress = true
+            pacMoveNow()
           }, timers.pacNextLifePause)
-        }, 30000)
+        }, timers.pacLossLifePause)
         // timers.pacLossLifePause
 
+        // place characters at their start positions (after life lost)
+
+
+  // }
 
 
         console.log(ghStateNow)
@@ -625,6 +627,9 @@ function startNextLevel() {
   playerStateNow.level += 0  // zero for single level game
   playerStateNow.levelDecade += 10
   setLevel()
+  // put actors back to start positions
+  actorsStateReset()
+  startPositions
   // levelTextEl.innerText = playerStateNow.levelDecade
   endGame() // for single level game
 }
@@ -647,6 +652,9 @@ replayBtnEl.addEventListener('click', playAgain)
 function pacMoveNow() {
   document.addEventListener('keydown', pacMoveCtrl)
 }
+function pacMoveNot() {
+  document.removeEventListener('keydown', pacMoveCtrl)
+}
 window.addEventListener('load', onLoad)
 
 
@@ -667,6 +675,9 @@ function test() {
   gh2MoveInterval: ` + gh2MoveInterval + `
   gh3MoveInterval: ` + gh3MoveInterval + `
   gh4MoveInterval: ` + gh4MoveInterval + `
+  pacLossLifeTimer: ` + pacLossLifeTimer + `
+  pacNextLifeTimer: ` + pacNextLifeTimer + `
+  
   
   STATE OF PLAY ` + `
   gameInProgress: ` + gameInProgress + `
