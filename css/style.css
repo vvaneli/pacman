@@ -99,12 +99,7 @@ h1 {
 }
 
 .dot,
-.pow,
-.pac,
-.gh1,
-.gh2,
-.gh3,
-.gh4 {
+.pow {
   background: url(/img/pacman_sprites_5w4h_16px_@2x.gif);
   background-size: 500%;
 }
@@ -114,6 +109,8 @@ h1 {
 .gh2,
 .gh3,
 .gh4 {
+  background: url(/img/pacman_sprites_5w4h_16px_@2x.gif);
+  background-size: 500%;
   scale: 1.5;
 }
 
@@ -192,7 +189,7 @@ h1 {
 }
 
 /* COMMON GHOST STATES */
-.gh-flee1 {
+/* .gh-flee1 {
   background-position: calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2);
 }
 .gh-flee2 {
@@ -203,7 +200,7 @@ h1 {
 }
 .gh-return-EW {
   background-position: calc(var(--mazeTileWidth) * -3) calc(var(--mazeTileWidth) * -3);
-}
+} */
 
 /* GAME AREA */
 

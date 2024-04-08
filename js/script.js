@@ -187,14 +187,10 @@ function gameOn() {
     }
   }, timers.startGamePause)
   gameStateIntervalCheck = setInterval(() => {
-    console.log('Start gameStateIntervalCheck: ' + gameStateIntervalCheck)
-    // console.log('Game State Interval Check: Game in progress? ' + gameInProgress)
     if (gameInProgress === true) {
       meetEnemy()
-      // lostGameLevel()
       winGameLevel()
     }
-    // console.log('Game in progress FALSE? ' + gameInProgress)
   }, timers.ghMoveSpeed)
 }
 
@@ -555,11 +551,30 @@ function eatItems() {
     countDotRemain -= 1
   } else if (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('pow')) {
     mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pow')
+
+    console.log('levelNow ' + levelNow)
+    ghFlee()
     playerStateNow.score += scoreSetup.pow
     scoreTextEl.innerText = playerStateNow.score
     countPowRemain -= 1
   }
   console.log('2 score: ' + playerStateNow.score + ' • dots: ' + countDotRemain + '/' + itemsSetup[levelNow].dots.length + ' • pows: ' + countPowRemain + '/' + itemsSetup[levelNow].pows.length)
+}
+
+function ghFlee() {
+  ghStateNow = 'flee1'
+  console.log(ghStateNow)
+  // gameInProgress = false
+  console.log('levelNow ' + levelNow)
+  mazeTileIndex[actorsStateNow[levelNow].gh1.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
+  mazeTileIndex[actorsStateNow[levelNow].gh2.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
+  mazeTileIndex[actorsStateNow[levelNow].gh3.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
+  mazeTileIndex[actorsStateNow[levelNow].gh4.tile].style.backgroundPosition = 'calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -2)'
+  // mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove('gh1').add('gh-flee1')
+  // mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.replace('gh2', 'gh-flee1')
+  // mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.remove('gh3').add('gh-flee1')
+  // mazeTileIndex[actorsStateNow[levelNow].gh4.tile].classList.remove('gh4').add('gh-flee1')
+  // gameInProgress = true
 }
 
 // pac and ghosts meet
@@ -592,7 +607,11 @@ function meetEnemy() {
           }, timers.pacLossLifePause)
         }
         break
-      case 'flee1': console.log(ghStateNow)
+      case 'flee1':
+        console.log(ghStateNow)
+        // gameInProgress = false
+
+        // gameInProgress = true
         break
       case 'flee2': console.log(ghStateNow)
         break
