@@ -333,14 +333,7 @@ details > div {
 /* WIDER SCREENS */
 
 @media screen and (min-width: 1200px) {
-  body {
-    background-color: yellow;
-  }
 
-  #game {
-    rotate: 20deg;
-  }
-}
 
   /* FLEX CONTIANERS */
 
