@@ -2,7 +2,7 @@
 
 .tile {
   /* border: 1px solid rgba(255, 255, 255, 0.4); */
-  /* color: rgba(255, 255, 255, 0.2); */
+  /* color: rgba(255, 255, 255, 0.4); */
   /* opacity: 30%; */
   /* font-size: 8px; */
 
@@ -85,6 +85,11 @@ main,
 
 h1 {
   /* padding: 1em 0; */
+}
+
+
+h3 {
+  font-size: 0.7em;
 }
 
 /* ACTORS */
@@ -324,7 +329,7 @@ details > div {
   body {
     background-color: black;
     background-image: url(../img/PacTable_3.png);
-    background-size: 79%;
+    background-size: 69%;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center top;

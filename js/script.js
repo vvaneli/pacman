@@ -107,8 +107,9 @@ const timers = {
   endGamePause: 3000,
   pacMoveSpeed: 100,
   ghMoveSpeed: 120, // also used for gameStateIntervalCheck
-  ghFlee1Duration: 4000,
-  ghFlee2Duration: 3000,
+  ghFlee1Duration: 1000,
+  ghFlee2Duration: 9000,
+  meetEnemyIntervalCheck: 10,
   pacLossLifePause: 2000, // duration of animation after eaten by ghost
   pacNextLifePause: 1000, // pause at start position before next round resumes
 }
@@ -208,10 +209,11 @@ function gameOn() {
   }, timers.startGamePause)
   gameStateIntervalCheck = setInterval(() => {
     if (gameInProgress === true) {
-      meetEnemyGh1()
+      meetEnemyGh1Pac()
+      meetEnemyPacGh1
       winGameLevel()
     }
-  }, timers.ghMoveSpeed)
+  }, timers.meetEnemyIntervalCheck)
 }
 
 // play another game (after finishing a previous one)
@@ -667,8 +669,27 @@ function eatItems() {
 }
 
 // pac and gh1 encounter
-function meetEnemyGh1() {
-  if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains(gh1Sprite)) || (mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.contains(pacSprite))) {
+function meetEnemyPacGh1() {
+  if (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains(gh1Sprite)) {
+    // if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
+    if (actorsStateNow[levelNow].gh1.return === false) {
+      if (ghStateNow === 'hunt') {
+        console.log('meetEnemyGh1 > ghStateNow (hunt?): ' + ghStateNow)
+        eatPac()
+      } else { //if ((ghStateNow === 'flee1') || (ghStateNow === 'flee2'))
+        console.log('meetEnemyGh1 > ghStateNow (flee?):' + ghStateNow)
+        eatGhost()
+        actorsStateNow[levelNow].gh1.return = true // update ghost id
+        // gh1Sprite = 'gh-return-ew' // update ghost id
+        // console.log('meetEnemyGh1 > ghStateNow (return?):' + ghStateNow)
+      }
+    } else {
+      // gh1 return to ghst HQ
+    }
+  }
+}
+function meetEnemyGh1Pac() {
+  if (mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.contains(pacSprite)) {
     // if ((mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh1')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh2')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh3')) || (mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.contains('gh4'))) {
     if (actorsStateNow[levelNow].gh1.return === false) {
       if (ghStateNow === 'hunt') {
