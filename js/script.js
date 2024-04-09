@@ -285,7 +285,7 @@ function showPlayerState() {
 function drawMaze() {
   for (let i = 0; i < (mazeSetup[levelNow].mazeWidth * mazeSetup[levelNow].mazeHeight); i++) {
     mazeTile = document.createElement('div')
-    mazeTile.innerText = i
+    // mazeTile.innerText = i
     mazeTile.dataset.index = i
     mazeTile.classList.add('tile')
     mazeTile.style.width = mazeSetup.mazeTileWidthPx
@@ -366,7 +366,7 @@ function hideMaze() {
   removeAllActors()
   actorsStateNow = {}
   mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = ''
-  // gameCoverEl.style.backgroundImage = 'url(/img/game-end_800w600h.png)' // COMMENTED OUT FOR TESTING ONLY
+  gameCoverEl.style.backgroundImage = 'url(img/game-end_800w600h.png)' // COMMENTED OUT FOR TESTING ONLY
   replayBtnEl.removeAttribute('disabled')
   replayBtnEl.style.display = 'block'
   imgCoverHeadEl.innerText = 'Score: ' + playerStateNow.score
@@ -790,7 +790,7 @@ function pacMoveNot() {
 
 
 // For developemnt only:
-testBtnEl.addEventListener('click', test)
+// testBtnEl.addEventListener('click', test)
 
 function test() {
   // hideMaze()

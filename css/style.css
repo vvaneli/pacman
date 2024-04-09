@@ -2,9 +2,9 @@
 
 .tile {
   /* border: 1px solid rgba(255, 255, 255, 0.4); */
-  color: rgba(255, 255, 255, 0.2);
+  /* color: rgba(255, 255, 255, 0.2); */
   /* opacity: 30%; */
-  font-size: 8px;
+  /* font-size: 8px; */
 
   /* align-items: center; */
 }
@@ -14,7 +14,7 @@ body {
 }
 
 #gameMaze {
-  background-image: url(/img/PacMan_Maze_464w496h.png);
+  background-image: url(img/PacMan_Maze_464w496h.png);
   background-repeat: no-repeat;
   background-size: 100%;
 }
@@ -98,14 +98,9 @@ h1 {
   /* background-color: rgba(244, 76, 24, 0.7); */
 }
 
-/* .pac,
-.gh1,
-.gh2,
-.gh3,
-.gh4, */
 .dot,
 .pow {
-  background: url(/img/pacman_sprites_5w4h_16px_@2x.gif);
+  background: url(img/pacman_sprites_5w4h_16px_@2x.gif);
   background-size: 500%;
 }
 
@@ -128,32 +123,18 @@ h1 {
 .pac-ready,
 .pac-end
  {
-  background: url(/img/pacman_sprites_5w4h_16px_@2x.gif);
+  background: url(img/pacman_sprites_5w4h_16px_@2x.gif);
   background-size: 500%;
   scale: 1.5;
 }
 
+/* ITEM SPRITES */
 .dot {
   background-position: calc(var(--mazeTileWidth) * -4) calc(var(--mazeTileWidth) * -2);
 }
 .pow {
   background-position: calc(var(--mazeTileWidth) * -4) calc(var(--mazeTileWidth) * -3);
   }
-/* .gh1 {
-  background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -1);
-}
-.gh2 {
-  background-position: calc(var(--mazeTileWidth) * -2) calc(var(--mazeTileWidth) * -1);
-}
-.gh3 {
-  background-position: calc(var(--mazeTileWidth) * -3) calc(var(--mazeTileWidth) * -1);
-}
-.gh4 {
-  background-position: calc(var(--mazeTileWidth) * -4) calc(var(--mazeTileWidth) * -1);
-}
-.pac {
-  background-position: 0 calc(var(--mazeTileWidth) * -3);
-} */
 
 /* GH1 SPRITES */
 .gh1-ns {
@@ -252,7 +233,7 @@ h1 {
 }
 
 #gameCover {
-  /* background-image: url(/img/game-start_800w600h.png); */
+  background-image: url(img/game-start_800w600h.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: auto;
