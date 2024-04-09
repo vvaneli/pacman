@@ -110,7 +110,7 @@ const timers = {
   ghFlee1Duration: 4000,
   ghFlee2Duration: 3000,
   pacLossLifePause: 2000, // duration of animation after eaten by ghost
-  pacNextLifePause: 3000, // pause at start position before next round resumes
+  pacNextLifePause: 1000, // pause at start position before next round resumes
 }
 
 // –––––– 2: TIME TRACKERS –––––– //
@@ -260,6 +260,8 @@ function actorsStateReset() {
   actorsStateNow = {}
   actorsStateNow = Object.assign({}, actorsStateSetup)
   actorsStateNow = JSON.parse(JSON.stringify(actorsStateSetup))
+  pacStateNow = 'ready'
+  ghStateNow = 'hunt'
 }
 // initialise variables for level up
 function setLevel() {
@@ -332,8 +334,8 @@ function addGhostHQ() {
 // place characters at their start positions (at new game)
 function startPositions() {
   pacStateNow = 'ready'
-  // pacSprite = pacSpriteOptions()
-  // console.log(pacStateNow + pacSprite)
+  pacSpriteOptions()
+  console.log(pacStateNow + pacSprite)
   mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite)
   mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.add(gh2Sprite)
   mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.add(gh3Sprite)
@@ -702,11 +704,11 @@ function eatPac() {
     lostGameLevel()
   } else {
     pacLossLifeTimer = setTimeout(function () {
-      // mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove('pac-end'
       removeAllActors()
       // put characters back in their start tile index
       actorsStateReset()
       startPositions()
+      // pause before next round starts
       pacNextLifeTimer = setTimeout(function () {
         mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
         gameOn()
