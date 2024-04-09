@@ -322,7 +322,12 @@ details > div {
 
 @media screen and (min-width: 1980px) and (max-width: 1980px) {
   body {
-    background-color: yellow;
+    background-color: black;
+    background-image: url(../img/PacTable_3.png);
+    background-size: 79%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center top;
   }
 
   #game {
@@ -333,7 +338,6 @@ details > div {
 /* WIDER SCREENS */
 
 @media screen and (min-width: 1200px) {
-
 
   /* FLEX CONTIANERS */
 
