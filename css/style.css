@@ -202,12 +202,8 @@ h1 {
 }
 
 /* PACMAN SPRITES */
-/* cascade: listed last so pacman appears in front of ghost after eaten */
 .pac-ready {
   background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -2);
-}
-.pac-end {
-  background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -3);
 }
 .pac-n {
   background-position: 0 0;
@@ -220,6 +216,10 @@ h1 {
 }
 .pac-w {
   background-position: 0 calc(var(--mazeTileWidth) * -3);
+}
+/* cascade: listed last so pacman appears in front of ghost after eaten */
+.pac-end {
+  background-position: calc(var(--mazeTileWidth) * -1) calc(var(--mazeTileWidth) * -3);
 }
 
 /* GAME AREA */

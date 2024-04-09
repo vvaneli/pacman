@@ -109,8 +109,8 @@ const timers = {
   ghMoveSpeed: 120, // also used for gameStateIntervalCheck
   ghFlee1Duration: 4000,
   ghFlee2Duration: 3000,
-  pacLossLifePause: 5000, // 2000? duration of animation after eaten by ghost
-  pacNextLifePause: 5000, // 1000? pause at start position before next round resumes
+  pacLossLifePause: 2000, // duration of animation after eaten by ghost
+  pacNextLifePause: 3000, // pause at start position before next round resumes
 }
 
 // –––––– 2: TIME TRACKERS –––––– //
@@ -585,7 +585,6 @@ function gh1MoveS() {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite)
       actorsStateNow[levelNow].gh1.tile += mazeSetup[levelNow].mazeWidth
       gh1SpriteOptions()
-      // gh1Sprite = 'gh1-ns'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite)
     } else {
       clearInterval(gh1MoveInterval)
@@ -600,7 +599,6 @@ function gh1MoveW() {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite);
       actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[1];
       gh1SpriteOptions()
-      // gh1Sprite = 'gh1-ew'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite);
       clearInterval(gh1MoveInterval)
       gh1MoveW()
@@ -608,7 +606,6 @@ function gh1MoveW() {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite);
       (actorsStateNow[levelNow].gh1.tile)--;
       gh1SpriteOptions()
-      // gh1Sprite = 'gh1-ew'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite);
     } else {
       clearInterval(gh1MoveInterval)
@@ -623,7 +620,6 @@ function gh1MoveE() {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite);
       actorsStateNow[levelNow].gh1.tile = mazeSetup[levelNow].mazePortals.portal1[0];
       gh1SpriteOptions()
-      // gh1Sprite = 'gh1-ew'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite);
       clearInterval(gh1MoveInterval)
       gh1MoveE()
@@ -631,7 +627,6 @@ function gh1MoveE() {
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.remove(gh1Sprite);
       (actorsStateNow[levelNow].gh1.tile)++;
       gh1SpriteOptions()
-      // gh1Sprite = 'gh1-ew'
       mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite);
     } else {
       clearInterval(gh1MoveInterval)
@@ -693,13 +688,16 @@ function meetEnemyGh1() {
 // Any ghost eats pac
 function eatPac() {
   pacMoveNot()
-  // show sprite for pacman defeated
-  pacStateNow = 'lost'
-  playerStateNow.life -= 1
-  lifeTextEl.innerText = playerStateNow.life
   gameInProgress = false
   clearActorTimers()
-
+  // change to sprite for pacman defeated
+  mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove(pacSprite);
+  pacStateNow = 'lost'
+  pacSpriteOptions()
+  mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add(pacSprite);
+  // lose a life
+  playerStateNow.life -= 1
+  lifeTextEl.innerText = playerStateNow.life
   if (playerStateNow.life <= 0) {
     lostGameLevel()
   } else {
