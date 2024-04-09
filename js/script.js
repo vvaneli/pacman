@@ -110,8 +110,8 @@ const timers = {
   ghFlee1Duration: 1000,
   ghFlee2Duration: 9000,
   meetEnemyIntervalCheck: 10,
-  pacLossLifePause: 2000, // duration of animation after eaten by ghost
-  pacNextLifePause: 1000, // pause at start position before next round resumes
+  pacLossLifePause: 4000, // duration of animation after eaten by ghost
+  pacNextLifePause: 3000, // pause at start position before next round resumes
 }
 
 // –––––– 2: TIME TRACKERS –––––– //
@@ -336,8 +336,11 @@ function addGhostHQ() {
 // place characters at their start positions (at new game)
 function startPositions() {
   pacStateNow = 'ready'
+  ghStateNow = 'hunt'
   pacSpriteOptions()
+  gh1SpriteOptions()
   console.log(pacStateNow + pacSprite)
+  console.log(ghStateNow + gh1Sprite)
   mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite)
   mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.add(gh2Sprite)
   mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.add(gh3Sprite)
