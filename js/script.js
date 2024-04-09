@@ -109,8 +109,8 @@ const timers = {
   ghMoveSpeed: 120, // also used for gameStateIntervalCheck
   ghFlee1Duration: 4000,
   ghFlee2Duration: 3000,
-  pacLossLifePause: 2000, // duration of animation after eaten by ghost
-  pacNextLifePause: 1000,
+  pacLossLifePause: 5000, // 2000? duration of animation after eaten by ghost
+  pacNextLifePause: 5000, // 1000? pause at start position before next round resumes
 }
 
 // –––––– 2: TIME TRACKERS –––––– //
@@ -138,7 +138,7 @@ let eatGhostTimer
 
 // –––––– 3: CSS SPRITES –––––– //
 
-let pacSprite = 'pac-w'
+let pacSprite = 'pac-ready'
 let gh1Sprite = 'gh1-ew'
 let gh2Sprite = 'gh2-ew'
 let gh3Sprite = 'gh3-ew'
@@ -156,6 +156,8 @@ let levelNow
 
 // ghost status options: ['hunt', 'flee1', 'flee2']
 let ghStateNow = 'hunt'
+// pac status options: ['ready', 'cruise', 'lost']
+let pacStateNow = 'ready'
 
 // for game grid tile divs
 const mazeTileIndex = []
@@ -191,12 +193,14 @@ function startGame() {
 
 // start new game, or resume a game in progress
 function gameOn() {
+
   mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = '<h3 class="maze-alert">' + mazeAlertText.start + '</h3>'
   timekeeper = setTimeout(() => {
     // remove alert text
     mazeTileIndex[(mazeSetup[levelNow].textAlertTile)].innerHTML = ''
     gameInProgress = true
     playerStateNow.playing = gameInProgress
+
     if (gameInProgress === true) {
       pacMoveNow()
       ghMoveNow()
@@ -327,6 +331,9 @@ function addGhostHQ() {
 
 // place characters at their start positions (at new game)
 function startPositions() {
+  pacStateNow = 'ready'
+  // pacSprite = pacSpriteOptions()
+  // console.log(pacStateNow + pacSprite)
   mazeTileIndex[actorsStateNow[levelNow].gh1.tile].classList.add(gh1Sprite)
   mazeTileIndex[actorsStateNow[levelNow].gh2.tile].classList.add(gh2Sprite)
   mazeTileIndex[actorsStateNow[levelNow].gh3.tile].classList.add(gh3Sprite)
@@ -365,18 +372,47 @@ function hideMaze() {
   gameCoverEl.style.display = 'flex'
 }
 
+// which pacman sprite to use and when
+function pacSpriteOptions() {
+  switch (pacStateNow) {
+    case 'cruise':
+      switch (actorsStateNow[levelNow].pac.dir) {
+        case 'n': pacSprite = 'pac-n'
+          break
+        case 's': pacSprite = 'pac-s'
+          break
+        case 'e': pacSprite = 'pac-e'
+          break
+        case 'w': pacSprite = 'pac-w'
+          break
+      }
+      break
+    case 'lost': pacSprite = 'pac-end'
+      break
+    case 'ready': pacSprite = 'pac-ready'
+      break
+    default: pacSprite = 'pac-e'
+  }
+  console.log('pacSpriteOptions: ' + pacStateNow + pacSprite)
+}
+
 // move pacman
 function pacMoveCtrl(e) {
   // console.log(e)
+  pacStateNow = 'cruise'
   clearInterval(pacMoveInterval)
   if (e.key === 'ArrowUp' || e.key === 'w' || e.key === '8') {
     pacMoveN()
+    actorsStateNow[levelNow].pac.dir = 'n'
   } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === '2') {
     pacMoveS()
+    actorsStateNow[levelNow].pac.dir = 's'
   } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === '6') {
     pacMoveE()
+    actorsStateNow[levelNow].pac.dir = 'e'
   } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === '4') {
     pacMoveW()
+    actorsStateNow[levelNow].pac.dir = 'w'
   }
   // else {
   //   // put pacman back in same position if an unassigned key was pressed
@@ -391,7 +427,7 @@ function pacMoveN() {
       eatItems()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove(pacSprite)
       actorsStateNow[levelNow].pac.tile -= mazeSetup[levelNow].mazeWidth
-      pacSprite = 'pac-n'
+      pacSpriteOptions()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add(pacSprite)
     } else {
       clearInterval(pacMoveInterval)   // clears time interval when pacman hits a wall
@@ -404,7 +440,7 @@ function pacMoveS() {
       eatItems()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove(pacSprite)
       actorsStateNow[levelNow].pac.tile += mazeSetup[levelNow].mazeWidth
-      pacSprite = 'pac-s'
+      pacSpriteOptions()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add(pacSprite)
     } else {
       clearInterval(pacMoveInterval)
@@ -423,7 +459,7 @@ function pacMoveE() {
       eatItems()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove(pacSprite);
       (actorsStateNow[levelNow].pac.tile)++;
-      pacSprite = 'pac-e'
+      pacSpriteOptions()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add(pacSprite);
     } else {
       clearInterval(pacMoveInterval)
@@ -441,7 +477,7 @@ function pacMoveW() {
       eatItems()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.remove(pacSprite);
       (actorsStateNow[levelNow].pac.tile)--;
-      pacSprite = 'pac-w'
+      pacSpriteOptions()
       mazeTileIndex[actorsStateNow[levelNow].pac.tile].classList.add(pacSprite);
     } else {
       clearInterval(pacMoveInterval)
@@ -479,13 +515,21 @@ function ghMoveNow() {
 // move ghost1 randomly
 function gh1Move() {
   switch (actorsStateNow[levelNow].gh1.dir = getRandomDir()) {
-    case 'n': gh1MoveN()
+    case 'n':
+      gh1MoveN()
+      actorsStateNow[levelNow].gh1.dir = 'n'
       break
-    case 's': gh1MoveS()
+    case 's':
+      gh1MoveS()
+      actorsStateNow[levelNow].gh1.dir = 's'
       break
-    case 'e': gh1MoveE()
+    case 'e':
+      gh1MoveE()
+      actorsStateNow[levelNow].gh1.dir = 'e'
       break
-    case 'w': gh1MoveW()
+    case 'w':
+      gh1MoveW()
+      actorsStateNow[levelNow].gh1.dir = 'w'
       break
   }
 }
@@ -649,12 +693,13 @@ function meetEnemyGh1() {
 // Any ghost eats pac
 function eatPac() {
   pacMoveNot()
+  // show sprite for pacman defeated
+  pacStateNow = 'lost'
   playerStateNow.life -= 1
   lifeTextEl.innerText = playerStateNow.life
   gameInProgress = false
   clearActorTimers()
-  // show sprite for pacman defeated
-  pacSprite = 'pac-end'
+
   if (playerStateNow.life <= 0) {
     lostGameLevel()
   } else {
