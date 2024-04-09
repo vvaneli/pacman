@@ -14,7 +14,7 @@ body {
 }
 
 #gameMaze {
-  background-image: url(img/PacMan_Maze_464w496h.png);
+  background-image: url(../img/PacMan_Maze_464w496h.png);
   background-repeat: no-repeat;
   background-size: 100%;
 }
@@ -100,7 +100,7 @@ h1 {
 
 .dot,
 .pow {
-  background: url(img/pacman_sprites_5w4h_16px_@2x.gif);
+  background: url(../img/pacman_sprites_5w4h_16px_@2x.gif);
   background-size: 500%;
 }
 
@@ -123,7 +123,7 @@ h1 {
 .pac-ready,
 .pac-end
  {
-  background: url(img/pacman_sprites_5w4h_16px_@2x.gif);
+  background: url(../img/pacman_sprites_5w4h_16px_@2x.gif);
   background-size: 500%;
   scale: 1.5;
 }
@@ -233,7 +233,7 @@ h1 {
 }
 
 #gameCover {
-  background-image: url(img/game-start_800w600h.png);
+  background-image: url(../img/game-start_800w600h.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: auto;
